@@ -16,13 +16,16 @@
         <script type="text/javascript">
             $(function(){
                 location.href = "xcard.html";
+
+                // XCardInterface 이름으로 XCardInterface 클래스 메소드에 액세스 가능 (@JavascriptInterface 어노테이션 있는 메소드만 가능)
             });
         </script>
     </head>
     <body>
         <div class="app">
-            <div>잠시만 기다려 주십시오...</div>
-            <div><a href="xcard.html">이동</a></div>
+            <div style="text-align: center;">잠시만 기다려 주십시오...</div>
+            <div style="text-align: center;"><progress style="width: 50%;"></progress></div>
+            <div style="text-align:right; position: fixed; bottom: 20; right: 100;"><a href="xcard.html">이동</a></div>
             <script type="text/javascript">
                 location.href = "xcard.html";
             </script>

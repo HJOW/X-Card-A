@@ -100,6 +100,13 @@
    점수가 가장 높은 플레이어가 승리합니다.   
    The player with the highest score wins.
 
+## 앱 빌드 시 참고사항
+
+   * ts 파일이 존재하는 스크립트의 경우 js 대신 ts 파일을 수정 (타입스크립트 사용)
+   * 터미널로 assets 폴더에 가서 다음 명령어를 수행 후 안드로이드 스튜디오 실행
+
+     npm run build
+
 ## 사용된 외부 라이브러리 (Dependencies)
    * jQuery : https://jquery.com/
        (license : MIT)

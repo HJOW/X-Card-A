@@ -26,6 +26,10 @@ limitations under the License.
     min-width: 790px;
     min-height: 590px;
 }
+.hjow_xcard_style_place a {
+    color: blue;
+    text-decoration: none;
+}
 .hjow_xcard_style_place div.debugMode, td.debugMode {
     border: 1px solid gray !important;
 }

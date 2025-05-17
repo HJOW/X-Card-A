@@ -3351,6 +3351,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
                 isLowest = " order_player_last";
             results += "<table class='element e063 table_each_player_result presult_" + hjow_serializeString(playerOne.getUniqueId()) + " order_player_" + orderNo + isLowest + "'>";
             results += "   <tr class='element e064'>" + "\n";
+            results += "      <td class='element label' rowspan='3' style='text-align: center;'>" + (idx + 1) + "</td>" + "\n";
             results += "      <td class='element e065 label'>" + "\n";
             results += "          <span class='element e066 label'>" + hjow_serializeXMLString(hjow_trans("Name")) + "</span>" + "\n";
             results += "      </td>" + "\n";

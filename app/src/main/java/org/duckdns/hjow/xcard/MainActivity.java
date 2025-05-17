@@ -1,7 +1,9 @@
 package org.duckdns.hjow.xcard;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -12,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+    @SuppressLint("JavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,10 +29,22 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        WebView myWebView = (WebView) findViewById(R.id.webview);
-        WebSettings webSettings = myWebView.getSettings();
+        WebView webView = (WebView) findViewById(R.id.webview);
+        webView.addJavascriptInterface(new XCardInterface(this.getApplicationContext(), this), "XCardInterface");
+        webView.setNetworkAvailable(true);
+        webView.setWebViewClient(new XCardWebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.setHorizontalScrollBarEnabled(false); //가로 스크롤
+        webView.setVerticalScrollBarEnabled(false);   //세로 스크롤
+        WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setSupportZoom(true);
+        webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
 
-        myWebView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("file:///android_asset/index.html");
     }
 }

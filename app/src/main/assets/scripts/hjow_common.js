@@ -587,9 +587,19 @@ function hjow_supportES5() {
 h.supportES5 = hjow_supportES5;
 
 var hjow_getDeviceInfo = function() {
-    if (typeof (device) == 'undefined') return {
-        platform: 'browser'
-    };
+    if (typeof (device) == 'undefined') {
+        // cordova 사용 불가 시
+        try {
+            if(typeof (XCardInterface) == 'undefined' || XCardInterface == null) throw "XCardInterface is not defined";
+            var infos = {};
+            infos.platform = XCardInterface.getPlatform();
+            return infos;
+        } catch(e) {
+            return {
+                platform: 'browser'
+            };
+        }
+    }
     
     return device;
 };
@@ -604,6 +614,8 @@ function hjow_getPlatform() {
 h.getPlatform = hjow_getPlatform;
 
 function hjow_tryExit() {
+    console.log("Trying to exit...");
+    try { XCardInterface.exit(); } catch (e) { }
     try { navigator.device.exitApp(); } catch (e) { }
     try { device.exitApp(); } catch (e) { }
     try { xcard_interface.exit(); } catch (e) { }

@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "babel-cli": "^6.26.0",
     "ts-jest": "^29.3.4",
     "typescript": "^5.8.3"
   }
