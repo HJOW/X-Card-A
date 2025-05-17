@@ -1,0 +1,18 @@
+{
+  "name": "org.duckdns.hjow.xcard",
+  "version": "1.1.0",
+  "description": "X-Card",
+  "license": "Apache-2.0",
+  "author": "HJOW",
+  "type": "commonjs",
+  "main": "index.html",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --clean"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "ts-jest": "^29.3.4",
+    "typescript": "^5.8.3"
+  }
+}
