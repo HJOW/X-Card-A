@@ -76,6 +76,7 @@ function hjow_error(e, alertErr) {
 
 h.showError = hjow_error;
 
+/** 로그 대화상자 준비 */
 function hjow_prepareDialogLog() {
     if ($('.div_hjow_dialog_console .tf_hjow_console').length <= 0) {
         var logDialogHTML = "<div class='div_hjow_dialog_console' title='Log'>";
@@ -89,6 +90,7 @@ function hjow_prepareDialogLog() {
 
 h.prepareDialogLog = hjow_prepareDialogLog;
 
+/** 로그 대화상자 호출 */
 function hjow_openLogDialog() {
     if ($('.div_hjow_dialog_console').length <= 0) return;
     $('.div_hjow_dialog_console').dialog({
@@ -100,6 +102,7 @@ function hjow_openLogDialog() {
 
 h.openLogDialog = hjow_openLogDialog;
 
+/** 로그 대화상자 사용 종료 */
 function hjow_deleteLogDialog() {
     if (h.logAppendee == null || typeof (h.logAppendee) == 'undefined') return;
     $(h.logAppendee).empty();
@@ -111,7 +114,7 @@ h.deleteLogDialog = hjow_deleteLogDialog;
 h.alertFunction = null;
 
 function hjow_alert(obj, title) {
-    hjow_log(obj);
+    h.log(obj);
     if (h.alertFunction != null && typeof (h.alertFunction) != 'undefined') {
         h.alertFunction(obj, title);
         return;
@@ -165,6 +168,7 @@ function hjow_prepareJQuery() {
 
 h.prepareJQuery = hjow_prepareJQuery;
 
+/** HTML 태그에 사용되는 기호 <, > 변환, 줄띄움도 변환환 */
 function hjow_htmlForm(str) {
     var results = h.replaceStr(str, "<", "&lt;");
     results = h.replaceStr(results, ">", "&gt;");
@@ -174,6 +178,7 @@ function hjow_htmlForm(str) {
 
 h.htmlForm = hjow_htmlForm;
 
+/** 배열에서 원소 제거 */
 function hjow_removeItemFromArray(arr, itemIndex) {
     arr.splice(itemIndex, 1);
 };
@@ -219,6 +224,7 @@ function hjow_serializeString(str) {
 
 h.serializeString = hjow_serializeString;
 
+/** HTML 태그에 사용되는 기호 <, > 변환 */
 function hjow_serializeXMLString(str) {
     var results = String(str);
     results = h.replaceStr(results, '<', '&lt;');
@@ -259,6 +265,7 @@ function hjow_iterateObject(obj, func) {
 
 h.iterateObject = hjow_iterateObject;
 
+/** 문자열을 boolean 으로 변환, Y, N 인식 */
 function hjow_parseBoolean(obj) {
     if (obj == null) return false;
     if (obj == true) return true;
@@ -272,6 +279,7 @@ function hjow_parseBoolean(obj) {
 
 h.parseBoolean = hjow_parseBoolean;
 
+/** 배열 복사 */
 function hjow_simpleCloneArray(arr) {
     var newArr = [];
     for (var idx = 0; idx < arr.length; idx++) {
@@ -282,18 +290,20 @@ function hjow_simpleCloneArray(arr) {
 
 h.simpleCloneArray = hjow_simpleCloneArray;
 
+/** 배열 내 순서 랜덤하게 섞어 반환 */
 function hjow_ramdomizeArrayOrder(arr) {
-    var temp = h.simpleCloneArray(arr);
-    arr.splice(0, arr.length);
+    var target = h.simpleCloneArray(arr); // 동일 배열 두개가 필요, arr 손대지 않도록 복제해 사용
+    var temp   = h.simpleCloneArray(arr);
+    target.splice(0, target.length);
 
     while (temp.length >= 1) {
         var randomNo = Math.round((Math.random() * temp.length) - 0.01);
         if (randomNo >= temp.length) continue;
 
-        arr.push(temp[randomNo]);
+        target.push(temp[randomNo]);
         h.removeItemFromArray(temp, randomNo);
     }
-    return arr;
+    return target;
 }
 
 h.ramdomizeArrayOrder = hjow_ramdomizeArrayOrder;
@@ -586,6 +596,7 @@ function hjow_supportES5() {
 
 h.supportES5 = hjow_supportES5;
 
+/** 디바이스 정보 반환, 이걸로 안드로이드 / 브라우저 등을 판별별 */
 var hjow_getDeviceInfo = function() {
     if (typeof (device) == 'undefined') {
         // cordova 사용 불가 시
@@ -606,13 +617,15 @@ var hjow_getDeviceInfo = function() {
 
 h.getDeviceInfo = hjow_getDeviceInfo;
 
+/** 위 hjow_getDeviceInfo 함수의 소문자 버전 */
 function hjow_getPlatform() {
     var deviceObj = hjow_getDeviceInfo();
-    return String(deviceObj.platform).toLowerCase(); // windows / android / ios
+    return String(deviceObj.platform).toLowerCase(); // windows / android / ios / browser
 };
 
 h.getPlatform = hjow_getPlatform;
 
+/** 앱 종료 시도 */
 function hjow_tryExit() {
     console.log("Trying to exit...");
     try { XCardInterface.exit(); } catch (e) { }
@@ -624,6 +637,27 @@ function hjow_tryExit() {
 
 h.tryExit = hjow_tryExit;
 
+function hjow_checkAdOn() {
+    try {
+        if(XCardInterface.isAdvertisementActive() == 'Y') return true;
+        return false;
+    } catch(e) {
+        return false;
+    }
+}
+h.ads = {};
+h.ads.check = hjow_checkAdOn;
+
+function hjow_setAds(turnYn) {
+    try {
+        XCardInterface.setAd(String(turnYn));
+    } catch(e) {
+        h.log(e);
+    }
+}
+h.ads.set = hjow_setAds;
+
+/** select multi 컴포넌트를 대체할 대체컴포넌트 사용 사전준비 */
 function hjow_select_init(selectObj) {
     $(selectObj).each(function () {
         var selObj = $(this);
@@ -647,6 +681,7 @@ function hjow_select_init(selectObj) {
 
 h.select_init = hjow_select_init;
 
+/** select multi 대체컴포넌트 상태 동기화 */
 function hjow_select_sync(selectObj) {
     $(selectObj).each(function () {
         var jqObj = $(this);
@@ -669,6 +704,7 @@ function hjow_select_sync(selectObj) {
 
 h.select_sync = hjow_select_sync;
 
+/** select multi 대체컴포넌트 내 항목 클릭 시 호출 */
 function hjow_select_onClick(randomNo, value, selAlterObj) {
     var selObj = $('.sel_' + randomNo);
     var altObj = $('.div_' + randomNo);
@@ -685,6 +721,7 @@ h.selectfunc = {
     sync: h.select_sync
 };
 
+/** 가상 키보드 초기화 */
 function hjow_input_init(inpObj) {
     var virtualKeyboardDialogObj = $('div.hjow_virtual_keyboard_dialog');
     if (virtualKeyboardDialogObj.length <= 0) {
@@ -707,6 +744,7 @@ function hjow_input_init(inpObj) {
 
 h.input_init = hjow_input_init;
 
+/** 가상 키보드 구성 HTML 태그들 */
 function hjow_input_getKeyboardHTML(locale, isMultiLine) { // locale : enb(대문자), ens(소문자), spc(특수문자) - 한글은 조합 언어라 이 방식으로 불가능
     var result = '';
     result = result + "<table class='hjow_virtual_keyboard_table'>";
@@ -920,12 +958,14 @@ function hjow_input_getKeyboardHTML(locale, isMultiLine) { // locale : enb(대�
 
 h.input_getKeyboardHTML = hjow_input_getKeyboardHTML;
 
+/** 가상 키보드 구성 HTML 태그들 중 키패드 부분 */
 function hjow_input_getKeyHTML(keyDisp, keyVal) {
     return "<button type='button' class='hjow_virtual_keyboard_key' data-value='" + keyVal + "' onclick=\"hjow_input_onClickKey(this); return false;\">" + keyDisp + "</button>";
 };
 
 h.input_getKeyHTML = hjow_input_getKeyHTML;
 
+/** 가상 키보드 키 클릭 이벤트 */
 function hjow_input_onClickKey(btnObj) {
     var buttonObj = $(btnObj);
     var value = buttonObj.attr('data-value');

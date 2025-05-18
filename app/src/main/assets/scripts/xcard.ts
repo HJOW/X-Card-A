@@ -269,7 +269,7 @@ class LanguageSet extends UtilityMethods {
     public translate(target: string): string {
         var results: string = this.stringTable.get(target);
         if (results == null) {
-            if (this.localeAlt != 'en-US' && this.locale != 'en') hjow_log(target);
+            if (this.localeAlt != 'en-US' && this.locale != 'en') h.log(target);
             return target;
         }   
         return results;
@@ -316,7 +316,7 @@ function hjow_getCurrentLanguageSet(): LanguageSet {
 function hjow_trans(target: string): string {
     var langSet: LanguageSet = hjow_getCurrentLanguageSet();
     if (langSet == null) {
-        hjow_log(target);
+        h.log(target);
         return target;
     }
     return langSet.translate(target);
@@ -1353,7 +1353,7 @@ class XCardGameMode extends ModuleObject {
                 }
             }
         }
-        hjow_ramdomizeArrayOrder(this.totals);
+        this.totals = h.ramdomizeArrayOrder(this.totals);
     };
     public getStartCardNumber(): number {
         return -1;
@@ -1476,7 +1476,7 @@ class XCardGameMultiplylessMode extends XCardGameDefaultMode {
                 }
             }
         }
-        hjow_ramdomizeArrayOrder(this.totals);
+        this.totals = h.ramdomizeArrayOrder(this.totals);
     };
     public getStartCardNumber(): number {
         return 0;
@@ -1507,7 +1507,7 @@ class XCardGamePluslessMode extends XCardGameDefaultMode {
                 }
             }
         }
-        hjow_ramdomizeArrayOrder(this.totals);
+        this.totals = h.ramdomizeArrayOrder(this.totals);
     };
     public getClassName(): string {
         return "XCardGamePluslessMode";
@@ -1695,7 +1695,7 @@ var hjow_xcard_addGameMode = null;
 var hjow_xcard_addPlayerType = null;
 
 class XCardGameEngine extends ModuleObject {
-    protected version: string = "0.0.8";
+    protected version: string = "1.1.1";
     protected placeArea: string = null;
     protected gameModeList: XCardGameMode[] = [];
     protected gameModeIndex: number = 0;
@@ -1943,29 +1943,35 @@ class XCardGameEngine extends ModuleObject {
         if (mode.getUniqueId() != this.getSelectedGameMode().getUniqueId()) return;
         this.turnPlayerTime = turnPlayerTime;
     };
+
+    /**  메인화면 */
     public title() {
         this.gameStarted = false;
         // this.stopAllTimer(); // 타이머 종료 시 MS Edge 에서 게임 다시 시작 시 정상동작이 안됨
         this.clearAllPlayers();
+        h.ads.set(true);
         this.refreshPage();
     };
+
+    /** 게임 시작 */
     public startGame() {
         this.applyInputs();
 
-        hjow_log(hjow_trans("The game is preparing to start."));
+        h.log(hjow_trans("The game is preparing to start."));
+        h.ads.set(false);
 
         // 게임 모드별 처리
         var gameMode: XCardGameMode = this.getSelectedGameMode();
 
-        hjow_log(hjow_trans("Mode") + " : " + hjow_trans(gameMode.getName()));
-        hjow_log(hjow_trans(gameMode.getDescription()));
+        h.log(hjow_trans("Mode") + " : " + hjow_trans(gameMode.getName()));
+        h.log(hjow_trans(gameMode.getDescription()));
 
         var needDefaultAction = gameMode.startGame(this, this.players, this.deck);
         if (needDefaultAction) { // 기본 모드 처리
             // 카드 분배
             this.spreadCards();
 
-            hjow_log(hjow_trans("Cards is shuffled."));
+            h.log(hjow_trans("Cards is shuffled."));
 
             // 처음 스타트하는 플레이어 지정
             this.turnPlayerIndex = Math.round((Math.random() * this.players.length) + 0.01);
@@ -2021,7 +2027,7 @@ class XCardGameEngine extends ModuleObject {
             }, 500);
         }
 
-        hjow_log(hjow_replaceStr(hjow_trans("The first turn number is [[NUMBER]]"), "[[NUMBER]]", String(this.turnPlayerIndex)));
+        h.log(hjow_replaceStr(hjow_trans("The first turn number is [[NUMBER]]"), "[[NUMBER]]", String(this.turnPlayerIndex)));
         
         this.showSettings = false;
         this.needHideScreen = false;
@@ -2036,9 +2042,9 @@ class XCardGameEngine extends ModuleObject {
             this.prepareRecordingReplay();
         }
 
-        hjow_log(hjow_trans("Game is started."));
-        if (this.isDebugMode()) hjow_log(hjow_trans("Debug mode was activated."));
-        hjow_log(hjow_replaceStr(hjow_trans("Your turn, [[PLAYER]]."), "[[PLAYER]]", this.getPlayerNowTurn().getName()));
+        h.log(hjow_trans("Game is started."));
+        if (this.isDebugMode()) h.log(hjow_trans("Debug mode was activated."));
+        h.log(hjow_replaceStr(hjow_trans("Your turn, [[PLAYER]]."), "[[PLAYER]]", this.getPlayerNowTurn().getName()));
         
         this.refreshPage();
         this.actPlayerTurnStopRequest = false;
@@ -2063,7 +2069,7 @@ class XCardGameEngine extends ModuleObject {
             }
             if (cloned == null) {
                 this.replay = null;
-                hjow_log(hjow_trans("Some custom player setting is not supported for recording replay."));
+                h.log(hjow_trans("Some custom player setting is not supported for recording replay."));
                 return;
             }
             this.replay.players.push(cloned);
@@ -2221,7 +2227,7 @@ class XCardGameEngine extends ModuleObject {
         }
         gameMode.afterNextTurnWork(this, this.players, this.deck, this.turnNumber);
 
-        hjow_log(hjow_replaceStr(hjow_trans("Your turn, [[PLAYER]]."), "[[PLAYER]]", this.getPlayerNowTurn().getName()));
+        h.log(hjow_replaceStr(hjow_trans("Your turn, [[PLAYER]]."), "[[PLAYER]]", this.getPlayerNowTurn().getName()));
 
         this.actPlayerTurnStopRequest = false;
         this.actPlayerTurnRequest = true;
@@ -2255,8 +2261,8 @@ class XCardGameEngine extends ModuleObject {
         var gameMode: XCardGameMode = this.getSelectedGameMode();
         gameMode.onFinishGame(this, this.players, this.deck);
 
-        hjow_log(hjow_trans("Game is finished."));
-        if (this.isDebugMode()) hjow_log(hjow_trans("Debug mode was activated."));
+        h.log(hjow_trans("Game is finished."));
+        if (this.isDebugMode()) h.log(hjow_trans("Debug mode was activated."));
         
         this.refreshPage(false);
         gameMode.afterResultPage(this, this.players, this.deck);
@@ -3260,7 +3266,7 @@ class XCardGameEngine extends ModuleObject {
             }
         }
 
-        hjow_log("TURN [" + player.getName() + "] : " + hjow_replaceStr(hjow_replaceStr(hjow_trans("Pay the card '[[CARD]]' to the player '[[PLAYER]]'."), "[[CARD]]", targetCard.toString()), "[[PLAYER]]", targetPlayer.getName()));
+        h.log("TURN [" + player.getName() + "] : " + hjow_replaceStr(hjow_replaceStr(hjow_trans("Pay the card '[[CARD]]' to the player '[[PLAYER]]'."), "[[CARD]]", targetCard.toString()), "[[PLAYER]]", targetPlayer.getName()));
 
         this.nextTurn();
         return null;
@@ -3378,12 +3384,12 @@ class XCardGameEngine extends ModuleObject {
         });
 
         this.reAllocateButtonEvent(jq('.btn_console_run'), function (compObj) {
-            hjow_log(eval(jq(selfObj.placeArea).find('.tx_console_run').val()));
+            h.log(eval(jq(selfObj.placeArea).find('.tx_console_run').val()));
             hjow_openLogDialog();
         });
         
         this.reAllocateButtonEvent(jq('.btn_exit'), function (compObj) {
-            hjow_tryExit();
+            h.tryExit();
         });
     };
     protected prepareEvents() {
@@ -3475,7 +3481,7 @@ class XCardGameEngine extends ModuleObject {
                 }
             }
 
-            hjow_log("TURN [" + player.getName() + "] : " + hjow_trans("Get one card from deck."));
+            h.log("TURN [" + player.getName() + "] : " + hjow_trans("Get one card from deck."));
             selfObj.nextTurn();
         };
         selfAny.events.game.btn_pay_here = function (playerUniqId: string) {
@@ -3836,13 +3842,13 @@ class XCardReplayEngine extends XCardGameEngine {
         }
     };
     protected onTurnChangedAfter() {
-        hjow_log(hjow_replaceStr(hjow_replaceStr(hjow_trans("Turn [[TURN]], [[PLAYER]]."), "[[PLAYER]]", this.getPlayerNowTurn().getName()), "[[TURN]]", String((this.turnNumber + 1))));
+        h.log(hjow_replaceStr(hjow_replaceStr(hjow_trans("Turn [[TURN]], [[PLAYER]]."), "[[PLAYER]]", this.getPlayerNowTurn().getName()), "[[TURN]]", String((this.turnNumber + 1))));
         var action: XCardReplayAction = this.getThisTurnAction();
         if (action.payTargetPlayerIndex < 0 || action.card == null) {
-            hjow_log(hjow_replaceStr(hjow_trans("The player '[[PLAYER]]' take a card from the deck."), "[[PLAYER]]", this.players[action.actionPlayerIndex].getName()));
+            h.log(hjow_replaceStr(hjow_trans("The player '[[PLAYER]]' take a card from the deck."), "[[PLAYER]]", this.players[action.actionPlayerIndex].getName()));
         } else {
             this.lastMessage = hjow_replaceStr(hjow_replaceStr(hjow_replaceStr(hjow_trans("The player '[[PLAYER]]' pay '[[CARD]]' to the player '[[TARGET]]'."), "[[PLAYER]]", this.players[action.actionPlayerIndex].getName()), "[[CARD]]", action.card.toString()), "[[TARGET]]", this.players[action.payTargetPlayerIndex].getName());
-            hjow_log(this.lastMessage);
+            h.log(this.lastMessage);
         }
     };
     protected refreshEvents() {
@@ -3934,12 +3940,12 @@ class XCardReplayEngine extends XCardGameEngine {
             return;
         }
         
-        hjow_log(hjow_trans("The game is preparing to start."));
+        h.log(hjow_trans("The game is preparing to start."));
         this.lastMessage = "";
         this.gameStarted = true;
         this.refreshPage();
 
-        if (this.isDebugMode()) hjow_log(hjow_trans("Debug mode was activated."));
+        if (this.isDebugMode()) h.log(hjow_trans("Debug mode was activated."));
         this.onTurnChangedAfter();
         
         this.actPlayerTurnStopRequest = false;

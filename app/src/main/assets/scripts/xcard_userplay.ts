@@ -379,12 +379,12 @@ class XCardUserPlayEngine extends XCardGameEngine {
         });
 
         this.reAllocateButtonEvent(jq('.btn_console_run'), function (compObj) {
-            hjow_log(eval(jq(selfObj.placeArea).find('.tx_console_run').val()));
+            h.log(eval(jq(selfObj.placeArea).find('.tx_console_run').val()));
             hjow_openLogDialog();
         });
 
         this.reAllocateButtonEvent(jq('.btn_exit'), function (compObj) {
-            hjow_tryExit();
+            h.tryExit();
         });
     };
     protected prepareEvents() {
@@ -493,7 +493,7 @@ class XCardUserPlayEngine extends XCardGameEngine {
                 }
             }
 
-            hjow_log("TURN [" + player.getName() + "] : " + hjow_trans("Get one card from deck."));
+            h.log("TURN [" + player.getName() + "] : " + hjow_trans("Get one card from deck."));
             selfObj.nextTurn();
         };
         selfAny.events.game.btn_pay_here = function (playerUniqId: string) {
