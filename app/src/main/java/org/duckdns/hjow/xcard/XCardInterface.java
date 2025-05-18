@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
+/** 자바스크립트에서 XCardInterface 이름으로 이 객체에 액세스하여, 아래 메소드들을 호출할 수 있음 */
 public class XCardInterface {
     Context ctx;
     MainActivity activity;
@@ -33,8 +34,13 @@ public class XCardInterface {
     public void setAd(String status) {
         if(status == null) status = "N";
         status = status.toLowerCase().trim();
-        if(status.equals("y") || status.equals("true" )) advertisement = true;
-        if(status.equals("n") || status.equals("false")) advertisement = false;
+        if(status.equals("y") || status.equals("true" )) { advertisement = true;  return; }
+        if(status.equals("n") || status.equals("false")) { advertisement = false; return; }
         throw new RuntimeException("Wrong boolean character " + status);
+    }
+
+    @JavascriptInterface
+    public String getBuildNumber() {
+        return String.valueOf(2);
     }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "org.duckdns.hjow.xcard.firebase.host",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "firebase deploy"
+  },
+  "devDependencies": {
+    "firebase-tools": "^14.4.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "firebase": "^11.7.3"
+  }
+}

@@ -19,6 +19,10 @@
             }
         }, 300);
         function fn_closePage() {
+            if(h.getPlatform() == 'android') {
+                location.href = 'xcard.html';
+                return;
+            }
             window.close();
         }
     </script>
