@@ -504,7 +504,7 @@ function hjow_workOnDocumentReady(actionFunc, delayNotDeviceReady) {
         if (flags) return;
         flags = true;
         if (!hjow_isSupportedBrowser()) {
-            hjow_alert('This browser or platform is not supported.');
+            h.alert('This browser or platform is not supported.');
             return;
         }
         h.property.screenWidth = window.screenWidth;
@@ -604,10 +604,12 @@ var hjow_getDeviceInfo = function() {
             if(typeof (XCardInterface) == 'undefined' || XCardInterface == null) throw "XCardInterface is not defined";
             var infos = {};
             infos.platform = XCardInterface.getPlatform();
+            infos.build    = XCardInterface.getBuildNumber();
             return infos;
         } catch(e) {
             return {
-                platform: 'browser'
+                platform: 'browser',
+                build : 0
             };
         }
     }
@@ -619,11 +621,19 @@ h.getDeviceInfo = hjow_getDeviceInfo;
 
 /** 위 hjow_getDeviceInfo 함수를 통해 플랫폼 이름만 찾아 소문자로 반환 */
 function hjow_getPlatform() {
-    var deviceObj = hjow_getDeviceInfo();
+    var deviceObj = h.getDeviceInfo();
     return String(deviceObj.platform).toLowerCase(); // windows / android / ios / browser
 };
 
 h.getPlatform = hjow_getPlatform;
+
+/** 빌드 번호 (플랫폼) 반환 */
+function hjow_getBuildNumber() {
+    var deviceObj = h.getDeviceInfo();
+    if(deviceObj.build == null || typeof (deviceObj.build) == 'undefined') return 0;
+    return parseInt(deviceObj.build);
+}
+h.getBuildNumber = hjow_getBuildNumber;
 
 /** 앱 종료 시도 */
 function hjow_tryExit() {
@@ -697,7 +707,7 @@ function hjow_select_sync(selectObj) {
             if (valueOf == selObj.val()) addiClass = addiClass + ' selected';
             if ($(this).is('.concealed')) addiClass = addiClass + ' concealed';
             if ($(this).is('.hidden')) addiClass = addiClass + ' hidden';
-            altObj.append("<div class='selalter_option opt_" + randomNo + addiClass + "' data-value=\"" + hjow_serializeString(valueOf) + "\" onclick=\"hjow_select_onClick('" + randomNo + "', '" + hjow_serializeString(valueOf) + "', this); return false;\">" + hjow_serializeXMLString($(this).text()) + "</div>");
+            altObj.append("<div class='selalter_option opt_" + randomNo + addiClass + "' data-value=\"" + h.serializeString(valueOf) + "\" onclick=\"hjow_select_onClick('" + randomNo + "', '" + h.serializeString(valueOf) + "', this); return false;\">" + h.serializeXMLString($(this).text()) + "</div>");
         });
     });
 };
@@ -833,8 +843,8 @@ function hjow_input_getKeyboardHTML(locale, isMultiLine) { // locale : enb(대�
         result = result + "   <td class='key_1_1'>" + hjow_input_getKeyHTML('B', 'B') + "</td>";
         result = result + "   <td class='key_1_1'>" + hjow_input_getKeyHTML('N', 'N') + "</td>";
         result = result + "   <td class='key_1_1'>" + hjow_input_getKeyHTML('M', 'M') + "</td>";
-        result = result + "   <td class='key_1_1'>" + hjow_input_getKeyHTML(hjow_serializeXMLString('<'), hjow_serializeXMLString('<')) + "</td>";
-        result = result + "   <td class='key_1_1'>" + hjow_input_getKeyHTML(hjow_serializeXMLString('>'), hjow_serializeXMLString('>')) + "</td>";
+        result = result + "   <td class='key_1_1'>" + hjow_input_getKeyHTML(h.serializeXMLString('<'), h.serializeXMLString('<')) + "</td>";
+        result = result + "   <td class='key_1_1'>" + hjow_input_getKeyHTML(h.serializeXMLString('>'), h.serializeXMLString('>')) + "</td>";
         result = result + "   <td class='key_1_1'>" + hjow_input_getKeyHTML('?', '?') + "</td>";
         result = result + "   <td></td>";
         // rowspan affet 1 // 11 + 1 + 2
@@ -982,8 +992,8 @@ function hjow_input_onClickKey(btnObj) {
     var beforeVal = targetComp.val();
     var inputVal = buttonObj.attr('data-value');
     var newVal = null;
-    if (inputVal == hjow_serializeXMLString('<')) inputVal = '<';
-    else if (inputVal == hjow_serializeXMLString('>')) inputVal = '>';
+    if (inputVal == h.serializeXMLString('<')) inputVal = '<';
+    else if (inputVal == h.serializeXMLString('>')) inputVal = '>';
     if (inputVal == 'backspace') {
         newVal = beforeVal.substring(0, beforeVal.length - 1);
         targetComp.val(newVal);

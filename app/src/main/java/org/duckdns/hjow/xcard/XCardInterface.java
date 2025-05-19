@@ -41,6 +41,6 @@ public class XCardInterface {
 
     @JavascriptInterface
     public String getBuildNumber() {
-        return String.valueOf(2);
+        return String.valueOf(3);
     }
 }

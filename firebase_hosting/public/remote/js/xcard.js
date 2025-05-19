@@ -40,7 +40,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 var jqo = {
-    warnJQuery: function () { hjow_alert("Need jQuery to run this. Please call 'jq = $;' first."); },
+    warnJQuery: function () { h.alert("Need jQuery to run this. Please call 'jq = $;' first."); },
     hide: function () { this.warnJQuery(); return self; },
     show: function () { this.warnJQuery(); return self; },
     css: function (a, b) { this.warnJQuery(); return self; },
@@ -1393,12 +1393,12 @@ var XCardAIPlayer = /** @class */ (function (_super) {
                 difficultyStr = hjow_trans("Extreme");
             if (idx >= 4)
                 difficultyStr = hjow_trans("Crazy");
-            results += "<option value='" + idx + "'>" + hjow_serializeXMLString(difficultyStr) + "</option>";
+            results += "<option value='" + idx + "'>" + h.serializeXMLString(difficultyStr) + "</option>";
         }
         results += "</select>";
         results += "</div>";
         results += "<div class='div_player_ai_custom_element wide'>";
-        results += "<textarea class='tx_ai_script advanceMode' placeholder=\"" + hjow_serializeString("// " + hjow_trans("paste custom AI script here if you want")) + "\"></textarea>";
+        results += "<textarea class='tx_ai_script advanceMode' placeholder=\"" + h.serializeString("// " + hjow_trans("paste custom AI script here if you want")) + "\"></textarea>";
         results += "</div>";
         return results;
     };
@@ -2053,7 +2053,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         if (additionalRefreshFunction === void 0) { additionalRefreshFunction = null; }
         if (debugMode === void 0) { debugMode = false; }
         var _this = _super.call(this, "X Card", "X Card Game Core Engine") || this;
-        _this.version = "1.1.1";
+        _this.version = "1.1.2";
         _this.placeArea = null;
         _this.gameModeList = [];
         _this.gameModeIndex = 0;
@@ -2146,7 +2146,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         var useBrowserInputOpt = this.getProperty('use_browser_input');
         var screenApplySpeed = this.getProperty('screen_apply_speed');
         if (useBrowserSelectOpt == null || typeof (useBrowserSelectOpt) == 'undefined' || useBrowserSelectOpt == '') {
-            if (hjow_getPlatform() == 'android' || hjow_getPlatform() == 'windowsuniversal') {
+            if (h.getPlatform() == 'android' || h.getPlatform() == 'windowsuniversal') {
                 useBrowserSelectOpt = "false";
             }
             else {
@@ -2155,7 +2155,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
             this.setProperty('use_browser_select', useBrowserSelectOpt);
         }
         if (useBrowserInputOpt == null || typeof (useBrowserInputOpt) == 'undefined' || useBrowserInputOpt == '') {
-            if (hjow_getPlatform() == 'android') {
+            if (h.getPlatform() == 'android') {
                 useBrowserInputOpt = "false";
             }
             else {
@@ -2220,7 +2220,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         bodyHtml += "<div class='page page_set section'></div>\n";
         bodyHtml += "<div class='toolbar footer'></div>\n";
         jq(this.placeArea).html(hjow_toStaticHTML(bodyHtml));
-        jq('body').append("<div class='hjow_xcard_how_to_play_dialog' style='width: 400px; height: 300px; display: none' title=\"" + hjow_serializeString(hjow_trans("How to play")) + "\"></div>");
+        jq('body').append("<div class='hjow_xcard_how_to_play_dialog' style='width: 400px; height: 300px; display: none' title=\"" + h.serializeString(hjow_trans("How to play")) + "\"></div>");
         this.prepareHowToPlayDialog();
         var selfObj = this;
         hjow_prepareDialogLog();
@@ -2557,7 +2557,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
             hjow_saveOnLocalStorage('XCard', this.properties.serialize());
         }
         catch (e) {
-            hjow_alert(e, hjow_trans('Error'));
+            h.alert(e, hjow_trans('Error'));
         }
     };
     ;
@@ -2673,7 +2673,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
     XCardGameEngine.prototype.refreshPage = function (heavyRefresh) {
         if (heavyRefresh === void 0) { heavyRefresh = true; }
         this.applyInputs();
-        if (hjow_getPlatform() == 'android' || hjow_getPlatform() == 'browser' || hjow_getPlatform() == 'windowsuniversal') {
+        if (h.getPlatform() == 'android' || h.getPlatform() == 'browser' || h.getPlatform() == 'windowsuniversal') {
             jq(this.placeArea).find('.selalter_option').off('click');
         }
         var inHeight = window.innerHeight - 20;
@@ -2752,14 +2752,14 @@ var XCardGameEngine = /** @class */ (function (_super) {
         if (this.players.length <= 0) {
             results += "   <tr class='tr_player pbasic_none  element'>" + "\n";
             results += "       <td class='td_player_none element'>" + "\n";
-            results += "          <span class='label element'>" + hjow_serializeXMLString(hjow_trans("Please add player to play.")) + "</span>" + "\n";
+            results += "          <span class='label element'>" + h.serializeXMLString(hjow_trans("Please add player to play.")) + "</span>" + "\n";
             results += "       </td>" + "\n";
             results += "   </tr>" + "\n";
         }
         else {
             for (var idx = 0; idx < this.players.length; idx++) {
                 var currentPlayer = this.players[idx];
-                results += "   <tr class='tr_player element pbasic_" + hjow_serializeString(currentPlayer.getUniqueId()) + "'>" + "\n";
+                results += "   <tr class='tr_player element pbasic_" + h.serializeString(currentPlayer.getUniqueId()) + "'>" + "\n";
                 results += "       <td class='td_player element'>" + "\n";
                 results += this.eachPlayerMainHTML(currentPlayer);
                 results += "       </td>" + "\n";
@@ -2775,7 +2775,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
                 var selectedOpt = '';
                 if (this.beforeSelectedPlayerType == playerType.getTypeName())
                     selectedOpt = ' selected';
-                results += "          <option value='" + hjow_serializeString(playerType.getTypeName()) + "'" + selectedOpt + ">" + hjow_serializeXMLString(hjow_trans(playerType.getTypeName())) + "</option>" + "\n";
+                results += "          <option value='" + h.serializeString(playerType.getTypeName()) + "'" + selectedOpt + ">" + h.serializeXMLString(hjow_trans(playerType.getTypeName())) + "</option>" + "\n";
             }
         }
         results += "          </select>" + "\n";
@@ -2805,7 +2805,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         var selGameMode = jq(this.placeArea).find('.sel_game_mode');
         selGameMode.find('option').remove();
         for (var mdx = 0; mdx < this.gameModeList.length; mdx++) {
-            selGameMode.append(hjow_toStaticHTML("<option value='" + mdx + "'>" + hjow_serializeXMLString(hjow_trans(this.gameModeList[mdx].getName())) + "</option>"));
+            selGameMode.append(hjow_toStaticHTML("<option value='" + mdx + "'>" + h.serializeXMLString(hjow_trans(this.gameModeList[mdx].getName())) + "</option>"));
         }
         selGameMode.val(this.gameModeIndex);
         this.refreshMainGameMode(true);
@@ -2858,30 +2858,32 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
     };
     ;
+    /** 게임 현황 새로고침 */
     XCardGameEngine.prototype.refreshGame = function () {
         jq(this.placeArea).find('.table_player_arena_each').removeClass('current_turn');
-        var currentPlayer = this.getPlayerNowTurn();
-        if (currentPlayer.isUserControllable()) {
+        var currentPlayer = this.getPlayerNowTurn(); // 현재 차례의 플레이어
+        if (currentPlayer.isUserControllable()) { // 현재 차례의 플레이어가 컨트롤 가능한 플레이어인 경우 (즉 AI가 아닌 경우우)
             jq(this.placeArea).find('.btn_user_control').removeProp('disabled');
             jq(this.placeArea).find('.btn_user_control').removeAttr('disabled');
             jq(this.placeArea).find('.btn_user_control').removeClass('disabled');
         }
-        else {
+        else { // 현재의 플레이어가 AI인 경우
             jq(this.placeArea).find('.btn_user_control').prop('disabled', true);
             jq(this.placeArea).find('.btn_user_control').attr('disabled', 'disabled');
             jq(this.placeArea).find('.btn_user_control').addClass('disabled');
         }
-        jq(this.placeArea).find(".table_player_arena_each.pplace_" + hjow_serializeString(currentPlayer.getUniqueId()) + "").addClass('current_turn');
+        jq(this.placeArea).find(".table_player_arena_each.pplace_" + h.serializeString(currentPlayer.getUniqueId()) + "").addClass('current_turn');
         jq(this.placeArea).find('.deck_lefts').text(this.deck.length);
+        // 플레이어 루프프
         for (var pdx = 0; pdx < this.players.length; pdx++) {
             var playerOne = this.players[pdx];
-            var thisTurn = (pdx == this.turnPlayerIndex);
-            var formulaContent = playerOne.listAppliedAsString();
-            var placeObj = jq(this.placeArea).find(".pplace_" + hjow_serializeString(playerOne.getUniqueId()));
+            var thisTurn = (pdx == this.turnPlayerIndex); // 현재차례여부
+            var formulaContent = playerOne.listAppliedAsString(); // 이 플레이어의 점수에 반영된 카드 리스트
+            var placeObj = jq(this.placeArea).find(".pplace_" + h.serializeString(playerOne.getUniqueId()));
             placeObj.find(".player_inventory_card_count").text(playerOne.getInventoryCardCount());
             placeObj.find(".point_number").text(playerOne.getCurrentPoint(this.getSelectedGameMode()).toString());
             placeObj.find(".point_number").attr('title', formulaContent);
-            // Inventory Synchronizing
+            // 인벤토리 (이 플레이어가 가지고 있는 카드) 새로고침
             var invenSel = placeObj.find(".select_player_arena.inventory");
             var invenObjs = invenSel.find("option");
             var invenOptList = [];
@@ -2918,11 +2920,11 @@ var XCardGameEngine = /** @class */ (function (_super) {
             }
             for (var rdx = 0; rdx < needRemoveInv.length; rdx++) {
                 var elemOne = needRemoveInv[rdx];
-                invenSel.find("option[value='" + hjow_serializeString(elemOne) + "']").remove();
+                invenSel.find("option[value='" + h.serializeString(elemOne) + "']").remove();
             }
             for (var rdx2 = 0; rdx2 < needAddInv.length; rdx2++) {
                 var targetCard = needAddInv[rdx2];
-                var newOptionHTML = "<option value='" + hjow_serializeString(targetCard.getUniqueId()) + "'>" + hjow_serializeXMLString(targetCard.toString()) + "</option>";
+                var newOptionHTML = "<option value='" + h.serializeString(targetCard.getUniqueId()) + "'>" + h.serializeXMLString(targetCard.toString()) + "</option>";
                 invenSel.append(hjow_toStaticHTML(newOptionHTML));
             }
             invenObjs = invenSel.find("option:not('.concealed')");
@@ -2943,7 +2945,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
                 concealedOpt.removeClass('hidden');
                 concealedOpt.show();
             }
-            // Affector Synchronizing
+            // 이 플레이어의 점수에 반영된 카드들 (점수 스택에 놓인 카드들) 목록 새로고침
             var affectorSel = placeObj.find(".select_player_arena.affector");
             var affectorObjs = affectorSel.find("option");
             affectorObjs.removeProp('selected');
@@ -2982,40 +2984,45 @@ var XCardGameEngine = /** @class */ (function (_super) {
             }
             for (var rdx3 = 0; rdx3 < needRemoveAff.length; rdx3++) {
                 var elemOne = needRemoveAff[rdx3];
-                affectorSel.find("option[value='" + hjow_serializeString(elemOne) + "']").remove();
+                affectorSel.find("option[value='" + h.serializeString(elemOne) + "']").remove();
             }
             for (var rdx4 = 0; rdx4 < needAddAff.length; rdx4++) {
                 var targetCard = needAddAff[rdx4];
-                var newOptionHTML = "<option value='" + hjow_serializeString(targetCard.getUniqueId()) + "'>" + hjow_serializeXMLString(targetCard.toString()) + "</option>";
+                var newOptionHTML = "<option value='" + h.serializeString(targetCard.getUniqueId()) + "'>" + h.serializeXMLString(targetCard.toString()) + "</option>";
                 affectorSel.append(hjow_toStaticHTML(newOptionHTML));
             }
             affectorSel.attr('title', formulaContent);
             affectorObjs = affectorSel.find("option");
             if (affectorObjs.length >= 1) {
                 affectorSel.val(jq(affectorObjs[affectorObjs.length - 1]).attr('value'));
-                if (hjow_getPlatform() == 'android' || hjow_getPlatform() == 'browser' || hjow_getPlatform() == 'windowsuniversal') {
+                if (h.getPlatform() == 'android' || h.getPlatform() == 'browser' || h.getPlatform() == 'windowsuniversal') {
                     hjow_select_sync(affectorSel);
                 }
             }
         }
+        // 테마 초기화
         this.initTheme(1, false);
+        // 플레이어별 새로고침 함수 호출
         for (var idx = 0; idx < this.players.length; idx++) {
             this.players[idx].refreshGame(this);
         }
         var selfObj = this;
         hjow_runAfter(function () {
-            selfObj.refreshGameAfterTime();
+            selfObj.refreshGameAfterTime(); // 새로고침 후반부 작업 (컴포넌트 크기 조절 등등)
         }, parseInt(selfObj.getProperty('screen_apply_speed')));
     };
     ;
+    /** 게임 상태 새로고침 후반부 작업 */
     XCardGameEngine.prototype.refreshGameAfterTime = function () {
+        // 세로 길이이 조절
         var heightVal = jq(this.placeArea).height() - 20; // window.innerHeight;
-        if (heightVal < 500)
-            heightVal = 500;
+        if (heightVal < 300)
+            heightVal = 300;
+        // 가로 길이 조절
         var widthVal = jq(this.placeArea).width() - 10; // window.innerWidth;
-        if (widthVal < 700)
-            widthVal = 700;
-        var minimumPad = 20;
+        if (widthVal < 500)
+            widthVal = 500;
+        var minimumPad = 20; // 공통 여백 크기
         jq(this.placeArea).find('.player_arena_div').css('min-height', heightVal - 100 - minimumPad + 'px');
         jq(this.placeArea).find('.player_arena_div').css('max-height', heightVal - minimumPad + 'px');
         jq(this.placeArea).find('.player_arena_div').css('max-width', widthVal - 5 + 'px');
@@ -3058,33 +3065,39 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
     };
     ;
+    /** 결과 화면 새로고침 */
     XCardGameEngine.prototype.refreshResult = function () {
-        var gameMode = this.getSelectedGameMode();
+        var gameMode = this.getSelectedGameMode(); // 종료된 게임의 모드
         jq(this.placeArea).find('.replay_result').hide();
+        // 결과 화면 내 라벨
         var finResultLb = jq(this.placeArea).find('.lb_finish_result');
         finResultLb.text('');
         if (this.resultReason != null)
-            finResultLb.text(this.resultReason);
+            finResultLb.text(this.resultReason); // 라벨에 게임 종료 사유 입력
+        // 플레이어별 루프 (각 플레이어별 결과화면에 값 입력)
         for (var idx = 0; idx < this.players.length; idx++) {
             var playerOne = this.players[idx];
-            var playerBlock = jq(this.placeArea).find(".presult_" + hjow_serializeString(playerOne.getUniqueId()));
+            var playerBlock = jq(this.placeArea).find(".presult_" + h.serializeString(playerOne.getUniqueId()));
             playerBlock.find(".i_name").val(playerOne.getName());
             playerBlock.find(".i_type").val(playerOne.getPlayerTypeName());
             playerBlock.find(".i_point").val(playerOne.getCurrentPoint(gameMode).toString());
             playerBlock.find(".i_affects").val(playerOne.listAppliedAsString());
         }
+        // 테마 초기화
         this.initTheme(1, false);
+        // 리플레이가 기록된 경우
         if (this.replay != null) {
             var rsn = this.resultReason;
             this.replay.reason = (rsn == null ? "" : rsn);
-            this.resultReplay();
+            this.resultReplay(); // 결과 화면에 리플레이 출력
         }
-        else {
-            jq(this.placeArea).find('.replay_json').val('');
+        else { // 리플레이가 기록되지 않은 경우
+            jq(this.placeArea).find('.replay_json').val(''); // 리플레이 비우기
             jq(this.placeArea).find('.btn_show_replay').hide();
         }
     };
     ;
+    /** 설정 화면 새로고침 */
     XCardGameEngine.prototype.refreshSettingPage = function () {
         var settingPage = jq(this.placeArea).find('.page_set');
         var recordReplayOpt = this.getProperty('record_replay');
@@ -3177,6 +3190,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
     };
     ;
+    /** 결과 화면 내에 리플레이 내용 출력 */
     XCardGameEngine.prototype.resultReplay = function () {
         this.replay.debugModeUsed = this.debugMode;
         var results = this.replay.toPlainObjectDetail(this);
@@ -3184,12 +3198,13 @@ var XCardGameEngine = /** @class */ (function (_super) {
         jq(this.placeArea).find('.btn_show_replay').show();
     };
     ;
+    /** 메인 화면 HTML 작성 */
     XCardGameEngine.prototype.mainPageHTML = function () {
         var results = "";
         results += "<table class='element e001 full layout'>" + "\n";
         results += "  <tr class='element e002'>" + "\n";
         results += "     <td class='element e003 td_game_title' colspan='2'>" + "\n";
-        results += "        <h2 class='element e004'>" + hjow_serializeXMLString(hjow_trans("X Card")) + "</h2>" + "\n";
+        results += "        <h2 class='element e004'>" + h.serializeXMLString(hjow_trans("X Card")) + "</h2>" + "\n";
         results += "     </td>" + "\n";
         results += "  </tr>" + "\n";
         results += "  <tr class='element e005'>" + "\n";
@@ -3199,7 +3214,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         results += "  <tr class='element e006'>" + "\n";
         results += "     <td class='element e007 td_game_below td_game_start'>" + "\n";
         results += "        <select class='element e008 sel_game_mode'></select>" + "\n";
-        results += "        <button type='button' class='element e009 btn_game_start'>" + hjow_serializeXMLString(hjow_trans("Start Game")) + "</button>" + "\n";
+        results += "        <button type='button' class='element e009 btn_game_start'>" + h.serializeXMLString(hjow_trans("Start Game")) + "</button>" + "\n";
         results += "        <div class='element e010 div_game_mode_desc'></div>" + "\n";
         results += "     </td>" + "\n";
         results += "     <td class='element e163 td_game_below td_game_ads' style='width: 250px;'>" + "\n";
@@ -3209,61 +3224,62 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return results;
     };
     ;
+    /** 설정 화면 HTML 작성 */
     XCardGameEngine.prototype.setPageHTML = function () {
         var results = "";
         results += "<div class='element setting_list e011'>" + "\n";
         results += "<div class='element setting_element e012'>" + "\n";
         results += "   <p class='element e013'>" + "\n";
-        results += "      <span class='element e014 label'>" + hjow_serializeXMLString(hjow_trans("Language")) + "</span>" + "\n";
+        results += "      <span class='element e014 label'>" + h.serializeXMLString(hjow_trans("Language")) + "</span>" + "\n";
         results += "      <select class='element e015 sel_language'>" + "\n";
         for (var ldx = 0; ldx < hjow_languageSets.length; ldx++) {
             var languageSetOne = hjow_languageSets[ldx];
-            results += "<option value=\"" + hjow_serializeString(languageSetOne.locale) + "\">" + hjow_serializeString(languageSetOne.localeName) + "</option>" + "\n";
+            results += "<option value=\"" + h.serializeString(languageSetOne.locale) + "\">" + h.serializeString(languageSetOne.localeName) + "</option>" + "\n";
         }
         results += "      </select>" + "\n";
         results += "   </p>" + "\n";
         results += "</div>" + "\n";
         results += "<div class='element e016 setting_element'>" + "\n";
         results += "   <p class='element e017'>" + "\n";
-        results += "      <input type='checkbox' class='element e018 chk_record_replay'/><span class='label element e159'>" + hjow_serializeXMLString(hjow_trans("Record playing data")) + "</span>" + "\n";
+        results += "      <input type='checkbox' class='element e018 chk_record_replay'/><span class='label element e159'>" + h.serializeXMLString(hjow_trans("Record playing data")) + "</span>" + "\n";
         results += "   </p>" + "\n";
         results += "   <p class='element e019'>" + "\n";
         results += "      <pre class='element e020'>" + "\n";
-        results += hjow_serializeXMLString(hjow_trans("Trying to record playing data includes all progress in the game.")) + "\n";
+        results += h.serializeXMLString(hjow_trans("Trying to record playing data includes all progress in the game.")) + "\n";
         results += "      </pre>" + "\n";
         results += "   </p>" + "\n";
         results += "</div>" + "\n";
         results += "<div class='element e149 setting_element'>" + "\n";
         results += "   <p class='element e150'>" + "\n";
-        results += "      <input type='checkbox' class='element e151 chk_use_virtual_select'/><span class='label element e160'>" + hjow_serializeXMLString(hjow_trans("Use virtual select box")) + "</span>" + "\n";
+        results += "      <input type='checkbox' class='element e151 chk_use_virtual_select'/><span class='label element e160'>" + h.serializeXMLString(hjow_trans("Use virtual select box")) + "</span>" + "\n";
         results += "   </p>" + "\n";
         results += "   <p class='element e155'>" + "\n";
-        results += "      <input type='checkbox' class='element e156 chk_use_virtual_keyboard'/><span class='label element e161'>" + hjow_serializeXMLString(hjow_trans("Use virtual keyboard")) + "</span>" + "\n";
+        results += "      <input type='checkbox' class='element e156 chk_use_virtual_keyboard'/><span class='label element e161'>" + h.serializeXMLString(hjow_trans("Use virtual keyboard")) + "</span>" + "\n";
         results += "   </p>" + "\n";
         results += "   <p class='element e152'>" + "\n";
         results += "      <pre class='element e153'>" + "\n";
-        results += hjow_serializeXMLString(hjow_trans("Use virtual select boxes and virtual keyboards.")) + "\n";
+        results += h.serializeXMLString(hjow_trans("Use virtual select boxes and virtual keyboards.")) + "\n";
         results += "      </pre>" + "\n";
         results += "   </p>" + "\n";
         results += "</div>" + "\n";
         results += "<div class='element e021 setting_element'>" + "\n";
         results += "   <p class='element e022'>" + "\n";
-        results += "      <input type='checkbox' class='element e023 chk_set_use_advanced_features'/><span class='label'>" + hjow_serializeXMLString(hjow_trans("Show advanced features")) + "</span>" + "\n";
+        results += "      <input type='checkbox' class='element e023 chk_set_use_advanced_features'/><span class='label'>" + h.serializeXMLString(hjow_trans("Show advanced features")) + "</span>" + "\n";
         results += "   </p>" + "\n";
         results += "   <p class='element e023'>" + "\n";
         results += "      <pre class='element e024'>" + "\n";
-        results += hjow_serializeXMLString(hjow_trans("Not recommended for beginners of using computer.")) + "\n";
-        results += hjow_serializeXMLString(hjow_trans("If you use this features, you can use custom AI scripts.")) + "\n";
-        results += hjow_serializeXMLString(hjow_trans("Please check your script for malware before using it.")) + "\n";
+        results += h.serializeXMLString(hjow_trans("Not recommended for beginners of using computer.")) + "\n";
+        results += h.serializeXMLString(hjow_trans("If you use this features, you can use custom AI scripts.")) + "\n";
+        results += h.serializeXMLString(hjow_trans("Please check your script for malware before using it.")) + "\n";
         results += "      </pre>" + "\n";
         results += "   </p>" + "\n";
         results += "</div>" + "\n";
         results += "<div class='element e025 setting_element'>" + "\n";
         results += "   <p class='element e026'>" + "\n";
-        results += "      <span class='element e027 label'>" + hjow_serializeXMLString(hjow_trans("Theme Script")) + "</span>" + "\n";
+        results += "      <span class='element e027 label'>" + h.serializeXMLString(hjow_trans("Theme Script")) + "</span>" + "\n";
         results += "   </p>" + "\n";
         results += "   <p class='element e028'>" + "\n";
-        results += hjow_serializeXMLString(hjow_trans("You can paste the styling scripts here.")) + "\n";
+        results += h.serializeXMLString(hjow_trans("You can paste the styling scripts here.")) + "\n";
         results += "   </p>" + "\n";
         results += "   <p class='element e029'>" + "\n";
         results += "      <textarea class='element e030 tx_theme_script tx_theme_script_1 need_custom_keyboard'></textarea>" + "\n";
@@ -3272,24 +3288,25 @@ var XCardGameEngine = /** @class */ (function (_super) {
         results += "      <textarea class='element e032 tx_theme_script tx_theme_script_2 need_custom_keyboard'></textarea>" + "\n";
         results += "   </p>" + "\n";
         results += "</div>" + "\n";
-        results += "<div class='element setting_element scriptTest advanceMode'><input type='text' class='tx_console_run need_custom_keyboard'/><button type='button' class='element btn_console_run need_custom_keyboard'>" + hjow_serializeXMLString(hjow_trans("Run")) + "</button></div>\n";
+        results += "<div class='element setting_element scriptTest advanceMode'><input type='text' class='tx_console_run need_custom_keyboard'/><button type='button' class='element btn_console_run need_custom_keyboard'>" + h.serializeXMLString(hjow_trans("Run")) + "</button></div>\n";
         results += "</div>" + "\n";
         results += "<div class='element e033 setting_element setting_buttons_bottom'>" + "\n";
         results += "   <p class='element e034'>" + "\n";
-        results += "       <button type='button' class='element e035 btn_apply_setting'>" + hjow_serializeXMLString(hjow_trans("Apply")) + "</button>" + "\n";
-        results += "       <span class='element label e148 lb_need_restart_to_apply'>" + hjow_serializeXMLString(hjow_trans("Some features will be applied after restart.")) + "</span>" + "\n";
+        results += "       <button type='button' class='element e035 btn_apply_setting'>" + h.serializeXMLString(hjow_trans("Apply")) + "</button>" + "\n";
+        results += "       <span class='element label e148 lb_need_restart_to_apply'>" + h.serializeXMLString(hjow_trans("Some features will be applied after restart.")) + "</span>" + "\n";
         results += "   </p>" + "\n";
         results += "</div>" + "\n";
         return results;
     };
     ;
+    /** 게임 플레이 화면 HTML 작성 */
     XCardGameEngine.prototype.gamePageHTML = function () {
         var results = "";
         results += "<table class='element e036 full layout'>" + "\n";
         results += "   <tr class='element e037'>" + "\n";
         results += "       <td class='element e038 td_deck'>" + "\n";
-        results += "           <span class='element e039 label'>" + hjow_serializeXMLString(hjow_trans("In deck,")) + " </span><span class='element e040 deck_lefts'>0</span><span class='element e041 label'>" + " " + hjow_serializeXMLString(hjow_trans("cards")) + "</span>" + "\n";
-        results += "           <button type='button' class='element e042 btn_user_control btn_get_from_deck'>" + hjow_serializeXMLString(hjow_trans("Get one from deck")) + "</button>" + "\n";
+        results += "           <span class='element e039 label'>" + h.serializeXMLString(hjow_trans("In deck,")) + " </span><span class='element e040 deck_lefts'>0</span><span class='element e041 label'>" + " " + h.serializeXMLString(hjow_trans("cards")) + "</span>" + "\n";
+        results += "           <button type='button' class='element e042 btn_user_control btn_get_from_deck'>" + h.serializeXMLString(hjow_trans("Get one from deck")) + "</button>" + "\n";
         results += "       </td>" + "\n";
         results += "   </tr>" + "\n";
         results += "   <tr class='element e043'>" + "\n";
@@ -3311,12 +3328,13 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return results;
     };
     ;
+    /** 플레이어 순서 넘어갈 때 잠시 가리는 화면 HTML 작성 */
     XCardGameEngine.prototype.hidePageHTML = function () {
         var results = "";
         results += "<table class='element e050 full layout'>" + "\n";
         results += "   <tr class='element e051'>" + "\n";
         results += "      <td class='element e052'>" + "\n";
-        results += "          <button type='button' class='element e053 full btn_hide_reveal'>" + hjow_serializeXMLString(hjow_trans("Press this button to continue...")) + "</button>" + "\n";
+        results += "          <button type='button' class='element e053 full btn_hide_reveal'>" + h.serializeXMLString(hjow_trans("Press this button to continue...")) + "</button>" + "\n";
         results += "      </td>" + "\n";
         results += "   </tr>" + "\n";
         results += "   <tr class='element e054'>" + "\n";
@@ -3328,13 +3346,14 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return results;
     };
     ;
+    /** 결과 화면 HTML 작성 */
     XCardGameEngine.prototype.resultPageHTML = function () {
         var gameMode = this.getSelectedGameMode();
         var results = "";
         results += "<table class='element e057 full layout'>" + "\n";
         results += "   <tr class='element e058'>" + "\n";
         results += "      <td class='element e059'>" + "\n";
-        results += "         <h3 class='element e060'>" + hjow_serializeXMLString(hjow_trans("Result")) + "</h3>" + "<br/>" + "\n";
+        results += "         <h3 class='element e060'>" + h.serializeXMLString(hjow_trans("Result")) + "</h3>" + "<br/>" + "\n";
         results += "         <span class='element label e149 finish_result'>" + hjow_trans("Reason") + " : </span><span class='element label e150 finish_result lb_finish_result'></span>" + "\n";
         results += "      </td>" + "\n";
         results += "   </tr>" + "\n";
@@ -3353,25 +3372,25 @@ var XCardGameEngine = /** @class */ (function (_super) {
             var isLowest = "";
             if (idx == playerOrders.length - 1)
                 isLowest = " order_player_last";
-            results += "<table class='element e063 table_each_player_result presult_" + hjow_serializeString(playerOne.getUniqueId()) + " order_player_" + orderNo + isLowest + "'>";
+            results += "<table class='element e063 table_each_player_result presult_" + h.serializeString(playerOne.getUniqueId()) + " order_player_" + orderNo + isLowest + "'>";
             results += "   <tr class='element e064'>" + "\n";
             results += "      <td class='element label' rowspan='3' style='text-align: center;'>" + (idx + 1) + "</td>" + "\n";
             results += "      <td class='element e065 label'>" + "\n";
-            results += "          <span class='element e066 label'>" + hjow_serializeXMLString(hjow_trans("Name")) + "</span>" + "\n";
+            results += "          <span class='element e066 label'>" + h.serializeXMLString(hjow_trans("Name")) + "</span>" + "\n";
             results += "      </td>" + "\n";
             results += "      <td class='element e067'>" + "\n";
             results += "          <input type='text' class='element e068 i_name' disabled='disabled'/>" + "\n";
             results += "      </td>" + "\n";
             results += "      <td class='element e069 label'>" + "\n";
-            results += "          <span class='element e070 label'>" + hjow_serializeXMLString(hjow_trans("Type")) + "</span>" + "\n";
+            results += "          <span class='element e070 label'>" + h.serializeXMLString(hjow_trans("Type")) + "</span>" + "\n";
             results += "      </td>" + "\n";
             results += "      <td class='element e071'>" + "\n";
-            results += "          <input type='text' class='element e072 i_type' disabled='disabled' value='" + hjow_serializeString(playerOne.getPlayerTypeName()) + "'/>" + "\n";
+            results += "          <input type='text' class='element e072 i_type' disabled='disabled' value='" + h.serializeString(playerOne.getPlayerTypeName()) + "'/>" + "\n";
             results += "      </td>" + "\n";
             results += "   </tr>" + "\n";
             results += "   <tr class='element e073'>" + "\n";
             results += "      <td class='element e074 label'>" + "\n";
-            results += "          <span class='element e075 label'>" + hjow_serializeXMLString(hjow_trans("Affects")) + "</span>" + "\n";
+            results += "          <span class='element e075 label'>" + h.serializeXMLString(hjow_trans("Affects")) + "</span>" + "\n";
             results += "      </td>" + "\n";
             results += "      <td colspan='3' class='element e076'>" + "\n";
             results += "          <input type='text' class='element e077 i_affects' disabled='disabled'/>" + "\n";
@@ -3379,7 +3398,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
             results += "   </tr>" + "\n";
             results += "   <tr class='element e078'>" + "\n";
             results += "      <td class='element e079 label'>" + "\n";
-            results += "          <span class='element e080 label'>" + hjow_serializeXMLString(hjow_trans("Point")) + "</span>" + "\n";
+            results += "          <span class='element e080 label'>" + h.serializeXMLString(hjow_trans("Point")) + "</span>" + "\n";
             results += "      </td>" + "\n";
             results += "      <td colspan='3' class='element e081'>" + "\n";
             results += "          <input type='text' class='element e082 i_point' disabled='disabled'/>" + "\n";
@@ -3391,18 +3410,19 @@ var XCardGameEngine = /** @class */ (function (_super) {
         results += "   </tr>" + "\n";
         results += "   <tr class='element e083'>" + "\n";
         results += "      <td class='element e084'>" + "\n";
-        results += "         <button type='button' class='element e085 btn_end'>" + hjow_serializeXMLString(hjow_trans("OK")) + "</button>" + "\n";
-        results += "         <button type='button' class='element e086 btn_show_replay'>" + hjow_serializeXMLString(hjow_trans("See replay code")) + "</button>" + "\n";
+        results += "         <button type='button' class='element e085 btn_end'>" + h.serializeXMLString(hjow_trans("OK")) + "</button>" + "\n";
+        results += "         <button type='button' class='element e086 btn_show_replay'>" + h.serializeXMLString(hjow_trans("See replay code")) + "</button>" + "\n";
         results += "      </td>" + "\n";
         results += "   </tr>" + "\n";
         results += "</table>" + "\n";
         results += "<div class='replay_result element e087'>" + "\n";
-        results += "  <div class='lb_replay_result element e162'>" + hjow_serializeXMLString(hjow_trans("Copy and save following codes and paste on the replay player to see progress again.")) + "</div>" + "\n";
+        results += "  <div class='lb_replay_result element e162'>" + h.serializeXMLString(hjow_trans("Copy and save following codes and paste on the replay player to see progress again.")) + "</div>" + "\n";
         results += "  <textarea class='replay_json element e088' readonly='readonly'></textarea>" + "\n";
         results += "</div>" + "\n";
         return results;
     };
     ;
+    /** 메인화면 내 각 플레이어별 영역 HTML 작성 */
     XCardGameEngine.prototype.eachPlayerMainHTML = function (player) {
         var results = "";
         results += "<table class='full player_each element e089'>" + "\n";
@@ -3414,13 +3434,13 @@ var XCardGameEngine = /** @class */ (function (_super) {
         results += "   <tbody>" + "\n";
         results += "       <tr class='element e092'>" + "\n";
         results += "          <td class='element e093 player_info_basic_label'>" + "\n";
-        results += "              <span class='label element e094'>" + hjow_serializeXMLString(hjow_trans("Name")) + "</span>" + "\n";
+        results += "              <span class='label element e094'>" + h.serializeXMLString(hjow_trans("Name")) + "</span>" + "\n";
         results += "          </td>" + "\n";
         results += "          <td class='element e095 player_info_basic'>" + "\n";
         var playerNameFieldOpt = "";
         if (!player.isNameEditable())
             playerNameFieldOpt = " disabled";
-        results += "             <input type='text' class='element e096 inp_pname need_custom_keyboard" + playerNameFieldOpt + "' name='pname_" + hjow_serializeString(player.getUniqueId()) + "' value='" + hjow_serializeString(player.getName()) + "'" + playerNameFieldOpt + "/>" + "\n";
+        results += "             <input type='text' class='element e096 inp_pname need_custom_keyboard" + playerNameFieldOpt + "' name='pname_" + h.serializeString(player.getUniqueId()) + "' value='" + h.serializeString(player.getName()) + "'" + playerNameFieldOpt + "/>" + "\n";
         results += "          </td>" + "\n";
         results += "          <td rowspan='2' class='element e097'>" + "\n";
         var customHtml = player.customMainHTML();
@@ -3430,10 +3450,10 @@ var XCardGameEngine = /** @class */ (function (_super) {
         results += "       </tr>" + "\n";
         results += "       <tr class='element e098'>" + "\n";
         results += "          <td class='player_info_basic_label element e099'>" + "\n";
-        results += "              <span class='label element e100'>" + hjow_serializeXMLString(hjow_trans("Type")) + "</span>" + "\n";
+        results += "              <span class='label element e100'>" + h.serializeXMLString(hjow_trans("Type")) + "</span>" + "\n";
         results += "          </td>" + "\n";
         results += "          <td class='player_info_basic element e101'>" + "\n";
-        results += "             <span class='player_type element e102'>" + hjow_serializeXMLString(hjow_trans(player.getPlayerTypeName())) + "</span>" + "\n";
+        results += "             <span class='player_type element e102'>" + h.serializeXMLString(hjow_trans(player.getPlayerTypeName())) + "</span>" + "\n";
         results += "          </td>" + "\n";
         results += "       </tr>" + "\n";
         results += "   </tbody>" + "\n";
@@ -3441,14 +3461,15 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return results;
     };
     ;
+    /** 게임 내 각 플레이어 영역 HTML 작성 */
     XCardGameEngine.prototype.eachPlayerGameHTML = function (player) {
         var results = player.customGameHTML();
         if (results == null || results == "") {
-            results = "<div class='element e103 div_player_arena_each pdiv_" + hjow_serializeString(player.getUniqueId()) + "'>";
-            results += "<table class='element e104 td_player player_place table_player_arena_each pplace_" + hjow_serializeString(player.getUniqueId()) + "'>" + "\n";
+            results = "<div class='element e103 div_player_arena_each pdiv_" + h.serializeString(player.getUniqueId()) + "'>";
+            results += "<table class='element e104 td_player player_place table_player_arena_each pplace_" + h.serializeString(player.getUniqueId()) + "'>" + "\n";
             results += "   <tr class='element e105 player_arena_one_line_layout'>";
             results += "      <td colspan='2' class='element e106 player_arena_one_line_layout'>";
-            results += "         <span class='player_name element e107'>" + hjow_serializeXMLString(player.getName()) + "</span>";
+            results += "         <span class='player_name element e107'>" + h.serializeXMLString(player.getName()) + "</span>";
             results += "      </td>";
             results += "   </tr>";
             results += "   <tr class='element e108 player_arena_one_line_layout'>";
@@ -3461,25 +3482,25 @@ var XCardGameEngine = /** @class */ (function (_super) {
             results += "   </tr>";
             results += "   <tr class='element e113'>";
             results += "      <td class='element e114 td_select_container'>";
-            results += "         <select multiple class='element e115 select_player_arena inventory pinventory_" + hjow_serializeString(player.getUniqueId()) + " need_alter'>";
+            results += "         <select multiple class='element e115 select_player_arena inventory pinventory_" + h.serializeString(player.getUniqueId()) + " need_alter'>";
             results += "         </select>";
             results += "      </td>";
             results += "      <td class='element e116 td_select_container'>";
-            results += "         <select multiple class='element e117 select_player_arena affector paffector_" + hjow_serializeString(player.getUniqueId()) + " need_alter'>";
+            results += "         <select multiple class='element e117 select_player_arena affector paffector_" + h.serializeString(player.getUniqueId()) + " need_alter'>";
             results += "         </select>";
             results += "      </td>";
             results += "   </tr>";
             results += "   <tr class='element e118 player_arena_one_line_layout'>";
             results += "      <td class='element e119 player_arena_one_line_layout'>";
-            results += "          <span class='element e120 player_inventory_card_count'>0</span> <span class='label'>" + hjow_serializeXMLString(hjow_trans("Cards")) + "</span>";
+            results += "          <span class='element e120 player_inventory_card_count'>0</span> <span class='label'>" + h.serializeXMLString(hjow_trans("Cards")) + "</span>";
             results += "      </td>";
             results += "      <td class='element e121 player_arena_one_line_layout'>";
-            results += "          <button type='button' class='element e122 btn_user_control btn_pay_here' data-unique-id=\"" + hjow_serializeString(player.getUniqueId()) + "\">" + hjow_serializeXMLString(hjow_trans("Pay here")) + "</button>";
+            results += "          <button type='button' class='element e122 btn_user_control btn_pay_here' data-unique-id=\"" + h.serializeString(player.getUniqueId()) + "\">" + h.serializeXMLString(hjow_trans("Pay here")) + "</button>";
             results += "      </td>";
             results += "   </tr>";
             results += "   <tr class='element e123 player_arena_one_line_layout'>";
             results += "      <td colspan='2' class='element e124 player_arena_one_line_layout'>";
-            results += "          <span class='element e125 point_number ppoint_" + hjow_serializeString(player.getUniqueId()) + "'>0</span> <span class='label element e126'>" + "Points" + "</span>";
+            results += "          <span class='element e125 point_number ppoint_" + h.serializeString(player.getUniqueId()) + "'>0</span> <span class='label element e126'>" + "Points" + "</span>";
             results += "      </td>";
             results += "   </tr>";
             results += "</table>" + "\n";
@@ -3488,26 +3509,27 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return results;
     };
     ;
+    /** 툴바 영역 HTML 작성 */
     XCardGameEngine.prototype.toolbarHTML = function () {
         var results = "";
         results += "<div class='element e127 toolbar_element left toolbar_buttons'>";
         if (this.gameStarted) {
-            results += "<button type='button' class='element e128 btn_stop_game'>" + hjow_serializeXMLString(hjow_trans("Stop Game")) + "</button> ";
+            results += "<button type='button' class='element e128 btn_stop_game'>" + h.serializeXMLString(hjow_trans("Stop Game")) + "</button> ";
         }
         else if (this.showSettings) {
-            results += "<button type='button' class='element e130 btn_go_main'>" + hjow_serializeXMLString(hjow_trans("Go back to main")) + "</button> ";
+            results += "<button type='button' class='element e130 btn_go_main'>" + h.serializeXMLString(hjow_trans("Go back to main")) + "</button> ";
         }
         if (jq('.hjow_xcard_how_to_play_dialog').length >= 1) { // 플레이 영역 밖에 있는 영역임 !
-            results += "   <button type='button' class='element e146 btn_show_how_to'> " + hjow_serializeXMLString(hjow_trans("How to play")) + "</button>";
+            results += "   <button type='button' class='element e146 btn_show_how_to'> " + h.serializeXMLString(hjow_trans("How to play")) + "</button>";
         }
         if ((!this.showSettings) && ((!(this.gameStarted || this.showResult || this.needHideScreen)) || this.isDebugMode())) {
-            results += "<button type='button' class='element e129 btn_go_setting'>" + hjow_serializeXMLString(hjow_trans("Settings")) + "</button> ";
+            results += "<button type='button' class='element e129 btn_go_setting'>" + h.serializeXMLString(hjow_trans("Settings")) + "</button> ";
         }
-        results += "   <button type='button' class='element e131 btn_show_log'> " + hjow_serializeXMLString(hjow_trans("Show Log")) + "</button>";
-        results += "   <button type='button' class='element e132 btn_delete_log'>" + hjow_serializeXMLString(hjow_trans("Delete Log")) + "</button>";
-        var platformInfo = hjow_getPlatform();
+        results += "   <button type='button' class='element e131 btn_show_log'> " + h.serializeXMLString(hjow_trans("Show Log")) + "</button>";
+        results += "   <button type='button' class='element e132 btn_delete_log'>" + h.serializeXMLString(hjow_trans("Delete Log")) + "</button>";
+        var platformInfo = h.getPlatform();
         if (!(platformInfo == 'ios' || platformInfo == 'browser'))
-            results += "   <button type='button' class='element e132 btn_exit'>" + hjow_serializeXMLString(hjow_trans("Exit")) + "</button>";
+            results += "   <button type='button' class='element e132 btn_exit'>" + h.serializeXMLString(hjow_trans("Exit")) + "</button>";
         results += "</div>";
         results += "<div class='element e133 toolbar_element'>";
         results += "<span class='element e134 madeby'>Made by HJOW (hujinone22@naver.com)</span>";
@@ -3518,6 +3540,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return results;
     };
     ;
+    /** 메인화면에서 입력/선택한 내용들을 적용 */
     XCardGameEngine.prototype.applyInputs = function () {
         if (this.gameStarted)
             return;
@@ -3534,7 +3557,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
         for (var idx = 0; idx < this.players.length; idx++) {
             var playerOne = this.players[idx];
-            var playerBlock = jq(this.placeArea).find(".pbasic_" + hjow_serializeString(playerOne.getUniqueId()));
+            var playerBlock = jq(this.placeArea).find(".pbasic_" + h.serializeString(playerOne.getUniqueId()));
             if (playerBlock.length == 0)
                 continue;
             playerOne.setName(playerBlock.find('.inp_pname').val(), this);
@@ -3542,6 +3565,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
     };
     ;
+    /** 설정 적용 */
     XCardGameEngine.prototype.applySettings = function () {
         var settingPage = jq(this.placeArea).find(".page_set");
         var recordRepComp = settingPage.find('.chk_record_replay');
@@ -3585,7 +3609,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
                 JSON.parse(themeScripts);
         }
         catch (e) {
-            hjow_alert(e, hjow_trans('Error'));
+            h.alert(e, hjow_trans('Error'));
             themeScripts = '';
         }
         this.setProperty('theme_1', themeScripts);
@@ -3597,7 +3621,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
                 JSON.parse(themeScripts);
         }
         catch (e) {
-            hjow_alert(e, hjow_trans('Error'));
+            h.alert(e, hjow_trans('Error'));
             themeScripts = '';
         }
         this.setProperty('theme_2', themeScripts);
@@ -3606,16 +3630,17 @@ var XCardGameEngine = /** @class */ (function (_super) {
             this.applyProperties(); // 이 작업은 메인화면 돌아간 후에도 한번 더 수행해야 함
         }
         catch (e) {
-            hjow_alert(e, hjow_trans('Error'));
+            h.alert(e, hjow_trans('Error'));
         }
     };
     ;
+    /** 카드를 플레이어에게 제출 처리 */
     XCardGameEngine.prototype.payHere = function (targetPlayerUniqueId, cardUniqueId) {
         var player = this.getPlayerNowTurn(); // 현재 턴의 플레이어
         var targetPlayer = this.findPlayer(targetPlayerUniqueId); // 대상 플레이어
         var errMsg = targetPlayer.canPayByUniqId(cardUniqueId, player);
         if (errMsg != null) {
-            hjow_alert(errMsg, hjow_trans('Information'));
+            h.alert(errMsg, hjow_trans('Information'));
             return errMsg;
         }
         var targetCard = player.findInventoryCard(this, cardUniqueId);
@@ -3628,7 +3653,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
         errMsg = targetPlayer.payByUniqId(cardUniqueId, player);
         if (errMsg != null) {
-            hjow_alert(errMsg, hjow_trans('Information'));
+            h.alert(errMsg, hjow_trans('Information'));
             return errMsg;
         }
         if (this.replay != null) {
@@ -3655,6 +3680,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return null;
     };
     ;
+    /** 버튼 이벤트 제거 */
     XCardGameEngine.prototype.removeButtonEvent = function (btnObj) {
         var buttonOne = jq(btnObj);
         if (buttonOne.length >= 1) {
@@ -3666,6 +3692,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
     };
     ;
+    /** 카드 선택 이벤트 제거 */
     XCardGameEngine.prototype.removeSelectEvent = function (selObj) {
         var selOne = jq(selObj);
         if (selOne.length >= 1) {
@@ -3677,6 +3704,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
     };
     ;
+    /** 버튼 이벤트 다시 부여 */
     XCardGameEngine.prototype.reAllocateButtonEvent = function (btnObj, actFunc) {
         var buttonOne = jq(btnObj);
         if (buttonOne.length >= 1) {
@@ -3689,6 +3717,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return buttonOne;
     };
     ;
+    /** 카드 선택 이벤트 다시 부여 */
     XCardGameEngine.prototype.reAllocateSelectEvent = function (selObj, actFunc) {
         var selOne = jq(selObj);
         if (selOne.length >= 1) {
@@ -3701,6 +3730,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return selOne;
     };
     ;
+    /** 이벤트 전부 다시 부여 */
     XCardGameEngine.prototype.refreshEvents = function () {
         var selfObj = this;
         var selfAny = this.getSelfObject();
@@ -3764,6 +3794,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         });
     };
     ;
+    /** 이벤트 준비 */
     XCardGameEngine.prototype.prepareEvents = function () {
         var selfObj = this;
         var selfAny = this.getSelfObject(); // 이렇게 안하면 타입스크립트 제한사항 때문에 메소드 부여가 안 됨
@@ -3782,7 +3813,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
                 }
             }
             if (playerCreator == null) {
-                hjow_alert(hjow_trans("Please select correct player type."), hjow_trans('Information'));
+                h.alert(hjow_trans("Please select correct player type."), hjow_trans('Information'));
                 return;
             }
             var newPlayer = playerCreator.create(playerCreator.getTypeName() + " " + selfObj.players.length);
@@ -3816,7 +3847,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         };
         selfAny.events.main.btn_save_settings = function () {
             if (!hjow_parseBoolean(selfObj.getProperty('localStorageAvailable'))) {
-                hjow_alert(hjow_trans('On this platform, local storage saving is not working. Changes will be applied only this time.'));
+                h.alert(hjow_trans('On this platform, local storage saving is not working. Changes will be applied only this time.'));
             }
             selfObj.applySettings();
             if (selfObj.isDebugMode()) {
@@ -3857,14 +3888,14 @@ var XCardGameEngine = /** @class */ (function (_super) {
         };
         selfAny.events.game.btn_pay_here = function (playerUniqId) {
             var player = selfObj.players[selfObj.turnPlayerIndex]; // 현재 턴의 플레이어
-            var playerInvenObj = jq(selfObj.getPlaceArea()).find(".pplace_" + hjow_serializeString(player.getUniqueId()) + " .inventory");
+            var playerInvenObj = jq(selfObj.getPlaceArea()).find(".pplace_" + h.serializeString(player.getUniqueId()) + " .inventory");
             var selectedCardVal = playerInvenObj.val(); // 배열
             if (selectedCardVal.length <= 0) {
-                hjow_alert(hjow_trans("Please select your card first."), hjow_trans('Information'));
+                h.alert(hjow_trans("Please select your card first."), hjow_trans('Information'));
                 return;
             }
             if (selectedCardVal.length > 1) {
-                hjow_alert(hjow_trans("Cannot pay multiple cards."), hjow_trans('Information'));
+                h.alert(hjow_trans("Cannot pay multiple cards."), hjow_trans('Information'));
                 return;
             }
             selfObj.payHere(playerUniqId, selectedCardVal[0]);
@@ -3908,6 +3939,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         return themeOne;
     };
     ;
+    /** 도움말 대화상자 컨텐츠 준비 */
     XCardGameEngine.prototype.prepareHowToPlayDialog = function () {
         var dialogObj = jq('.hjow_xcard_how_to_play_dialog');
         var htmls = "";
@@ -3959,6 +3991,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         dialogObj.html(htmls);
     };
     ;
+    /** 도움말 대화상자 열기 */
     XCardGameEngine.prototype.showHowToPlayDialog = function () {
         var dialogObj = jq('.hjow_xcard_how_to_play_dialog');
         if (dialogObj.length <= 0)
@@ -3969,6 +4002,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         });
     };
     ;
+    /** 언어팩 준비 */
     XCardGameEngine.prototype.prepareLanguageSets = function () {
         var newLangSet = null;
         newLangSet = new LanguageSet();
@@ -4100,6 +4134,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
     return XCardGameEngine;
 }(ModuleObject));
 ;
+/** 리플레이 재생을 위한 엔진 */
 var XCardReplayEngine = /** @class */ (function (_super) {
     __extends(XCardReplayEngine, _super);
     function XCardReplayEngine(plcArea, additionalRefreshFunction, debugMode) {
@@ -4120,7 +4155,7 @@ var XCardReplayEngine = /** @class */ (function (_super) {
         results += "<table class='element e001 full layout'>" + "\n";
         results += "  <tr class='element e002'>" + "\n";
         results += "     <td class='element e003 td_game_title'>" + "\n";
-        results += "        <h2 class='element e004'>" + hjow_serializeXMLString(hjow_trans("X Card")) + "</h2>" + "\n";
+        results += "        <h2 class='element e004'>" + h.serializeXMLString(hjow_trans("X Card")) + "</h2>" + "\n";
         results += "     </td>" + "\n";
         results += "  </tr>" + "\n";
         results += "  <tr class='element e005'>" + "\n";
@@ -4129,7 +4164,7 @@ var XCardReplayEngine = /** @class */ (function (_super) {
         results += "  </tr>" + "\n";
         results += "  <tr class='element e006'>" + "\n";
         results += "     <td class='element e007 td_game_start' style='height: 25px;'>" + "\n";
-        results += "        <button type='button' class='element e009 btn_game_start'>" + hjow_serializeXMLString(hjow_trans("Start Replay")) + "</button>" + "\n";
+        results += "        <button type='button' class='element e009 btn_game_start'>" + h.serializeXMLString(hjow_trans("Start Replay")) + "</button>" + "\n";
         results += "     </td>" + "\n";
         results += "  </tr>" + "\n";
         results += "</table>" + "\n";
@@ -4149,16 +4184,16 @@ var XCardReplayEngine = /** @class */ (function (_super) {
         var results = "";
         results += "<div class='element e127 toolbar_element left toolbar_buttons'>";
         if (this.gameStarted) {
-            results += "<button type='button' class='element e128 btn_stop_game'>" + hjow_serializeXMLString(hjow_trans("Stop Replay")) + "</button> ";
+            results += "<button type='button' class='element e128 btn_stop_game'>" + h.serializeXMLString(hjow_trans("Stop Replay")) + "</button> ";
         }
         else if (this.showSettings) {
-            results += "<button type='button' class='element e130 btn_go_main'>" + hjow_serializeXMLString(hjow_trans("Go back to main")) + "</button> ";
+            results += "<button type='button' class='element e130 btn_go_main'>" + h.serializeXMLString(hjow_trans("Go back to main")) + "</button> ";
         }
-        results += "   <button type='button' class='element e131 btn_show_log'> " + hjow_serializeXMLString(hjow_trans("Show Log")) + "</button>";
-        results += "   <button type='button' class='element e132 btn_delete_log'>" + hjow_serializeXMLString(hjow_trans("Delete Log")) + "</button>";
-        var platformInfo = hjow_getPlatform();
+        results += "   <button type='button' class='element e131 btn_show_log'> " + h.serializeXMLString(hjow_trans("Show Log")) + "</button>";
+        results += "   <button type='button' class='element e132 btn_delete_log'>" + h.serializeXMLString(hjow_trans("Delete Log")) + "</button>";
+        var platformInfo = h.getPlatform();
         if (!(platformInfo == 'ios' || platformInfo == 'browser'))
-            results += "   <button type='button' class='element e132 btn_exit'>" + hjow_serializeXMLString(hjow_trans("Exit")) + "</button>";
+            results += "   <button type='button' class='element e132 btn_exit'>" + h.serializeXMLString(hjow_trans("Exit")) + "</button>";
         results += "</div>";
         results += "<div class='element e133 toolbar_element'>";
         results += "<span class='element e134 madeby'>Made by HJOW (hujinone22@naver.com)</span>";
@@ -4247,7 +4282,7 @@ var XCardReplayEngine = /** @class */ (function (_super) {
         try {
             var jsonContent = jq(this.placeArea).find('.tx_replay_code').val();
             if (jsonContent == null || jsonContent.trim() == '') {
-                hjow_alert(hjow_trans("Please input the replay code first."));
+                h.alert(hjow_trans("Please input the replay code first."));
                 return;
             }
             var jsonObj = JSON.parse(jsonContent);
