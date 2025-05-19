@@ -1,6 +1,11 @@
 {
-    "version": "1.1.0",
+    "version": "1.1.2",
+    "build" : 3,
     "config" : {
         "update" : false
+    },
+    "remoteBuild" : {
+        "use" : false,
+        "url" : "https://x-card-deeb7.web.app/remote/xcard.html"
     }
 }

@@ -14,7 +14,7 @@ firebase login
 
 npm run build
 
-2. /src/main/assets 폴더 내 파일들 중 index.html 을 제외한 파일들을 /firebase_hosting 로 복사
+2. /src/main/assets 폴더 내 파일들 중 index.html 을 제외한 파일들을 /firebase_hosting/public 로 복사
 
 3. 파이어베이스 호스팅에 배포
 
