@@ -161,6 +161,52 @@ function hjow_prepareJQuery() {
 }
 ;
 h.prepareJQuery = hjow_prepareJQuery;
+/** 화면 이동 (플랫폼에 따라 다르게 동작) */
+function hjow_goto(url, newDialog) {
+    var platform = h.getPlatform();
+    if (platform == 'android') {
+        XCardInterface.openURL(url);
+        return;
+    }
+    if (newDialog) {
+        window.open(url, '_blank', 'location=yes,toolbars=yes,status=yes');
+        return;
+    }
+    location.href = url;
+}
+h.openURL = hjow_goto;
+/** 페이지 이동 링크를 함수 형태로 변환 */
+function hjow_replaceLinks() {
+    $('a').each(function () {
+        var aObj = $(this);
+        var hrefs = aObj.attr('href');
+        if (aObj.is('.replaced_links'))
+            return;
+        if (hrefs == null || typeof (hrefs) == 'undefined')
+            return;
+        if (hrefs.indexOf('http://') == 0 || hrefs.indexOf('https://') == 0) {
+            aObj.attr('href', '#');
+            aObj.attr('data-gotourl', hrefs);
+            aObj.on('click', function () {
+                var target = $(this).attr('target');
+                var newDialog = false;
+                if (target == null || typeof (target) == 'undefined')
+                    target = '';
+                if (target == '')
+                    newDialog = false;
+                else if (target == '_blank')
+                    newDialog = true;
+                else if (target == '_self')
+                    newDialog = false;
+                else
+                    newDialog = true;
+                h.openURL($(this).attr('data-gotourl'), newDialog);
+            });
+            aObj.addClass('replaced_links');
+        }
+    });
+}
+h.replaceLinks = hjow_replaceLinks;
 /** HTML 태그에 사용되는 기호 <, > 변환, 줄띄움도 변환환 */
 function hjow_htmlForm(str) {
     var results = h.replaceStr(str, "<", "&lt;");

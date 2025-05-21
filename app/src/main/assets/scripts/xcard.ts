@@ -2340,6 +2340,9 @@ class XCardGameEngine extends ModuleObject {
             hjow_input_init('.need_custom_keyboard');
         }
         if (this.addiRefFunc != null) this.addiRefFunc(heavyRefresh);
+
+        // 외부 이동 함수 함수형으로 대체
+        h.replaceLinks();
     };
     protected refreshMain() {
         jq(this.placeArea).find('.td_player_list').empty();

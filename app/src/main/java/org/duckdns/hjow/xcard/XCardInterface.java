@@ -1,6 +1,8 @@
 package org.duckdns.hjow.xcard;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
@@ -42,5 +44,13 @@ public class XCardInterface {
     @JavascriptInterface
     public String getBuildNumber() {
         return String.valueOf(3);
+    }
+
+    @JavascriptInterface
+    public void openURL(String url) {
+        if(! (url.startsWith("http://") || url.startsWith("https://"))) url = "http://" + url;
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        ctx.startActivity(browserIntent);
     }
 }

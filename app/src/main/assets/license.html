@@ -18,6 +18,9 @@
             if (closeBtnOpt != null && hjow_parseBoolean(closeBtnOpt)) {
                 $('div.footer').hide();
             }
+
+            // 외부 이동 링크 함수형으로 바꾸기
+            h.replaceLinks();
         }, 300);
         function fn_closePage() {
             window.close();

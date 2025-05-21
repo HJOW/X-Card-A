@@ -51,6 +51,9 @@ BigInteger.js : https://www.npmjs.com/package/big-integer?activeTab=readme
         h.workOnDocumentReady(function (securityFunc) {
             securityFunc(new XCardGameEngine('#xcard_place', hjow_appendToolbar).init()); // parameter should be a string !!
             hjow_appendToolbar();
+
+            // 외부 이동 링크 함수형으로 바꾸기
+            h.replaceLinks();
         });
         function hjow_appendToolbar(heavyRefresh) {
             $('#xcard_place .toolbar_links').remove();

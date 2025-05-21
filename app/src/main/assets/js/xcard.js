@@ -2744,6 +2744,8 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
         if (this.addiRefFunc != null)
             this.addiRefFunc(heavyRefresh);
+        // 외부 이동 함수 함수형으로 대체
+        h.replaceLinks();
     };
     ;
     XCardGameEngine.prototype.refreshMain = function () {
