@@ -48,9 +48,7 @@ public class XCardInterface {
 
     @JavascriptInterface
     public void openURL(String url) {
-        if(! (url.startsWith("http://") || url.startsWith("https://"))) url = "http://" + url;
-
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        ctx.startActivity(browserIntent);
+        Log.i("XCardInterface", "openURL called - " + url);
+        if(url != null && activity != null) activity.openURL(url);
     }
 }

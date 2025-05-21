@@ -1,1 +1,1 @@
-{"root":["./scripts/hjow_common.js","./scripts/jquery-3.3.1.js","./scripts/jquery-ui.js","./scripts/not_opened.ts","./scripts/xcard.ts","./scripts/xcard_userplay.ts"],"version":"5.8.3"}
+{"root":["./scripts/hjow_common.js","./scripts/jquery-3.3.1.js","./scripts/jquery-ui.js","./scripts/not_opened.ts","./scripts/platformoverrides.js","./scripts/xcard.ts","./scripts/xcard_userplay.ts"],"version":"5.8.3"}

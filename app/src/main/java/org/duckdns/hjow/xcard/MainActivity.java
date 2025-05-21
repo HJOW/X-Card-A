@@ -1,7 +1,9 @@
 package org.duckdns.hjow.xcard;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -46,5 +48,12 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
 
         webView.loadUrl("file:///android_asset/index.html");
+    }
+
+    public void openURL(String url) {
+        if(! (url.startsWith("http://") || url.startsWith("https://"))) url = "http://" + url;
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        this.startActivity(browserIntent);
     }
 }
