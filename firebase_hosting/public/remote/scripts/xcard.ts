@@ -1695,7 +1695,7 @@ var hjow_xcard_addGameMode = null;
 var hjow_xcard_addPlayerType = null;
 
 class XCardGameEngine extends ModuleObject {
-    protected version: string = "1.1.3";
+    protected version: string = "1.1.4";
     protected placeArea: string = null;
     protected gameModeList: XCardGameMode[] = [];
     protected gameModeIndex: number = 0;
@@ -2984,6 +2984,9 @@ class XCardGameEngine extends ModuleObject {
         results += "      <td class='element e052'>" + "\n";
         results += "          <button type='button' class='element e053 full btn_hide_reveal'>" + h.serializeXMLString(hjow_trans("Press this button to continue...")) + "</button>" + "\n";
         results += "      </td>" + "\n";
+        results += "   </tr>" + "\n";
+        results += "   <tr class='element tr_waiting_ads invisible'>" + "\n";
+        results += "       <td class='element td_waiting_ads'></td>" + "\n";
         results += "   </tr>" + "\n";
         results += "   <tr class='element e054'>" + "\n";
         results += "      <td class='element e055 td_game_status'>" + "\n";

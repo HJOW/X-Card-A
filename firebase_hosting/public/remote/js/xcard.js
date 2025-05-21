@@ -2053,7 +2053,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         if (additionalRefreshFunction === void 0) { additionalRefreshFunction = null; }
         if (debugMode === void 0) { debugMode = false; }
         var _this = _super.call(this, "X Card", "X Card Game Core Engine") || this;
-        _this.version = "1.1.3";
+        _this.version = "1.1.4";
         _this.placeArea = null;
         _this.gameModeList = [];
         _this.gameModeIndex = 0;
@@ -3352,6 +3352,9 @@ var XCardGameEngine = /** @class */ (function (_super) {
         results += "      <td class='element e052'>" + "\n";
         results += "          <button type='button' class='element e053 full btn_hide_reveal'>" + h.serializeXMLString(hjow_trans("Press this button to continue...")) + "</button>" + "\n";
         results += "      </td>" + "\n";
+        results += "   </tr>" + "\n";
+        results += "   <tr class='element tr_waiting_ads invisible'>" + "\n";
+        results += "       <td class='element td_waiting_ads'></td>" + "\n";
         results += "   </tr>" + "\n";
         results += "   <tr class='element e054'>" + "\n";
         results += "      <td class='element e055 td_game_status'>" + "\n";
