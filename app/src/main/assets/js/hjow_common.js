@@ -631,7 +631,7 @@ function hjow_supportES5() {
 }
 ;
 h.supportES5 = hjow_supportES5;
-/** 디바이스 정보 반환, 이걸로 안드로이드 / 브라우저 등을 판별별 */
+/** 디바이스 정보 반환, 이걸로 안드로이드 / 브라우저 등을 판별 */
 var hjow_getDeviceInfo = function () {
     if (typeof (device) == 'undefined') {
         // cordova 사용 불가 시
@@ -641,12 +641,14 @@ var hjow_getDeviceInfo = function () {
             var infos = {};
             infos.platform = XCardInterface.getPlatform();
             infos.build = XCardInterface.getBuildNumber();
+            infos.sizeType = XCardInterface.getDeviceSizeType();
             return infos;
         }
         catch (e) {
             return {
                 platform: 'browser',
-                build: 0
+                build: 0,
+                sizeType: 'tablet'
             };
         }
     }
@@ -668,6 +670,14 @@ function hjow_getBuildNumber() {
     return parseInt(deviceObj.build);
 }
 h.getBuildNumber = hjow_getBuildNumber;
+/** 사이즈 타입 반환 (undefined, phone, tablet) */
+function hjow_getSizeType() {
+    var deviceObj = h.getDeviceInfo();
+    if (deviceObj.sizeType == null || typeof (deviceObj.sizeType) == 'undefined')
+        return 'tablet';
+    return deviceObj.sizeType;
+}
+h.getSizeType = hjow_getSizeType;
 /** 앱 종료 시도 */
 function hjow_tryExit() {
     console.log("Trying to exit...");

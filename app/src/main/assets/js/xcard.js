@@ -2053,7 +2053,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         if (additionalRefreshFunction === void 0) { additionalRefreshFunction = null; }
         if (debugMode === void 0) { debugMode = false; }
         var _this = _super.call(this, "X Card", "X Card Game Core Engine") || this;
-        _this.version = "1.1.5";
+        _this.version = "1.1.6";
         _this.placeArea = null;
         _this.gameModeList = [];
         _this.gameModeIndex = 0;

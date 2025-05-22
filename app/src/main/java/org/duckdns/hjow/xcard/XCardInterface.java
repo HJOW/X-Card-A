@@ -2,6 +2,7 @@ package org.duckdns.hjow.xcard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
@@ -44,6 +45,18 @@ public class XCardInterface {
     @JavascriptInterface
     public String getBuildNumber() {
         return String.valueOf(3);
+    }
+
+    @JavascriptInterface
+    public String getDeviceSizeType() {
+        int screenSizeType = ctx.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        if(screenSizeType == Configuration.SCREENLAYOUT_SIZE_UNDEFINED) return "undefined";
+        if(screenSizeType == Configuration.SCREENLAYOUT_SIZE_SMALL) return "phone";
+        if(screenSizeType == Configuration.SCREENLAYOUT_SIZE_NORMAL) return "phone";
+        if(screenSizeType == Configuration.SCREENLAYOUT_SIZE_LARGE) return "phone";
+        if(screenSizeType == Configuration.SCREENLAYOUT_SIZE_XLARGE) return "tablet";
+
+        return "undefined";
     }
 
     @JavascriptInterface
