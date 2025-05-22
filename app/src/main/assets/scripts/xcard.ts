@@ -282,7 +282,7 @@ var hjow_languageSets: LanguageSet[] = [];
 var hjow_selectedLocale: string = null;
 var hjow_langSelectFirst: boolean = true;
 function hjow_getCurrentLanguageSet(): LanguageSet {
-    var browserLocale = hjow_getLocaleInfo();
+    var browserLocale = h.getLocaleInfo();
     
     if (hjow_selectedLocale != null) {
         for (var ldx = 0; ldx < hjow_languageSets.length; ldx++) {
@@ -300,6 +300,7 @@ function hjow_getCurrentLanguageSet(): LanguageSet {
         for (var ldx = 0; ldx < hjow_languageSets.length; ldx++) {
             if (currentLocale[idx] == hjow_languageSets[ldx].locale || currentLocale[idx] == hjow_languageSets[ldx].localeAlt) {
                 hjow_selectedLocale = hjow_languageSets[ldx].locale;
+                jq('html').attr('lang', hjow_selectedLocale);
                 return hjow_languageSets[ldx];
             }
         }
@@ -307,12 +308,15 @@ function hjow_getCurrentLanguageSet(): LanguageSet {
 
     if (hjow_langSelectFirst) {
         hjow_selectedLocale = "en";
+        jq('html').attr('lang', hjow_selectedLocale);
+
         hjow_langSelectFirst = false; // 혹시나 모를 무한반복 방지
         return hjow_getCurrentLanguageSet();
     }
     
     return null;
 };
+h.getCurrentLanguageSet = hjow_getCurrentLanguageSet;
 function hjow_trans(target: string): string {
     var langSet: LanguageSet = hjow_getCurrentLanguageSet();
     if (langSet == null) {
@@ -321,6 +325,7 @@ function hjow_trans(target: string): string {
     }
     return langSet.translate(target);
 };
+h.trans = hjow_trans;
 
 class ModuleObject extends Uniqueable {
     protected name: string = "";
@@ -827,7 +832,7 @@ function hjow_orderPlayerList(players: XCardPlayer[], gameMode: XCardGameMode): 
 
         preventInfLoop++;
         if (preventInfLoop >= 1000 * Math.max(temps.length, 1)) {
-            hjow_error("Infinite Loop Detected");
+            h.showError("Infinite Loop Detected");
             break;
         }
     }
@@ -1078,7 +1083,7 @@ class XCardAIPlayer extends XCardPlayer {
 
                 preventInfLoop++;
                 if (preventInfLoop >= 1000 * Math.max(availableActions.length, 1)) {
-                    hjow_error("Infinite Loop Detected");
+                    h.showError("Infinite Loop Detected");
                     break;
                 }
             }
@@ -1725,7 +1730,7 @@ class XCardGameEngine extends ModuleObject {
     public constructor(plcArea: string = '.hjow_xcard_style_place', additionalRefreshFunction: Function = null, debugMode: boolean = false) {
         super("X Card", "X Card Game Core Engine");
         if (typeof (plcArea) != 'string') {
-            hjow_error('The parameter should be a string which is jQuery-selector form.');
+            h.showError('The parameter should be a string which is jQuery-selector form.');
             return;
         }
         this.placeArea = String(plcArea);
@@ -1736,7 +1741,7 @@ class XCardGameEngine extends ModuleObject {
         this.addiRefFunc = additionalRefreshFunction;
         this.debugMode = debugMode;
         if (debugMode) {
-            hjow_putEngine(this);
+            h.putEngine(this);
             jq('body').css('overflow-y', 'scroll');
         }
     };
@@ -1861,15 +1866,25 @@ class XCardGameEngine extends ModuleObject {
         this.prepareHowToPlayDialog();
 
         var selfObj = this;
-        hjow_prepareDialogLog();
-        hjow_prepareDialogAlert();
-        hjow_workOnScreenSizeChanged(function () {
+        h.prepareDialogLog();
+        h.prepareDialogAlert();
+        h.workOnScreenSizeChanged(function () {
             selfObj.refreshPage(false);
         });
 
         this.refreshPage();
     };
     initTheme(themeType: number = 0, atFirst: boolean = false) {
+        jq(this.placeArea).removeClass("predict_size_tablet").removeClass("predict_size_phone");
+        jq('html').removeClass("predict_size_tablet").removeClass("predict_size_phone");
+        if(h.getSizeType() == 'phone') {
+            jq(this.placeArea).addClass("predict_size_phone");
+            jq('html').addClass("predict_size_phone");
+        } else {
+            jq(this.placeArea).addClass("predict_size_tablet");
+            jq('html').addClass("predict_size_tablet");
+        }
+
         if (themeType == 0) {
             this.initTheme(1, atFirst);
             this.initTheme(2, atFirst);
@@ -1887,7 +1902,7 @@ class XCardGameEngine extends ModuleObject {
         try {
             var themes: Properties[] = [];
             var parsedObj = JSON.parse(themeStr);
-            if (hjow_isArray(parsedObj)) {
+            if (h.isArray(parsedObj)) {
                 for (var pdx = 0; pdx < parsedObj.length; pdx++) {
                     var theme: Properties = new Properties();
                     theme.fromPlainObject(parsedObj[pdx]);
@@ -1914,7 +1929,7 @@ class XCardGameEngine extends ModuleObject {
                 }
             }
         } catch (e) {
-            hjow_error(e);
+            h.showError(e);
         }
     };
     protected getSelectedGameMode(): XCardGameMode {
@@ -2133,7 +2148,7 @@ class XCardGameEngine extends ModuleObject {
             curIdx++;
             preventInfLoop++;
             if (preventInfLoop >= 1000 * Math.max(this.timers.length, 1)) {
-                hjow_error("Infinite Loop Detected");
+                h.showError("Infinite Loop Detected");
                 break;
             }
         }
@@ -2176,7 +2191,7 @@ class XCardGameEngine extends ModuleObject {
         try {
             this.properties.fromJSON(localStoreStr);
         } catch (e) {
-            hjow_error(e);
+            h.showError(e);
         }
     };
     protected findPlayer(uniqueId: string): XCardPlayer {
@@ -2277,9 +2292,12 @@ class XCardGameEngine extends ModuleObject {
     /** 화면 다시 새로고침 */
     public refreshPage(heavyRefresh: boolean = true) {
         this.applyInputs();
-        if (h.getPlatform() == 'android' || h.getPlatform() == 'browser' || h.getPlatform() == 'windowsuniversal') {
+
+        var platforms = h.getPlatform();
+        if (platforms == 'android' || platforms == 'browser' || platforms == 'windowsuniversal') {
             jq(this.placeArea).find('.selalter_option').off('click');
         }
+
         var inHeight = window.innerHeight - 20;
         if (jq(this.placeArea).is('.auto_size')) {
             jq(this.placeArea).height(inHeight);
@@ -2799,7 +2817,7 @@ class XCardGameEngine extends ModuleObject {
         var customLocaleOpt = this.getProperty('locale');
         if (customLocaleOpt == null || customLocaleOpt == '') customLocaleOpt = hjow_selectedLocale;
         if (hjow_selectedLocale == null || typeof (hjow_selectedLocale) == 'undefined') {
-            var browserLocale = hjow_getLocaleInfo();
+            var browserLocale = h.getLocaleInfo();
             if (!(typeof (browserLocale) == 'undefined' || browserLocale == null)) {
                 var currentLocale: any[] = hjow_makeArrayCompatible(browserLocale);
                 if (currentLocale == null || currentLocale.length <= 0) return null;
@@ -3342,7 +3360,7 @@ class XCardGameEngine extends ModuleObject {
                 action.date = new Date();
                 this.replay.actions.push(action);
             } catch (e) {
-                hjow_error(e);
+                h.showError(e);
                 this.replay = null;
             }
         }
@@ -3569,7 +3587,7 @@ class XCardGameEngine extends ModuleObject {
                     action.date = new Date();
                     selfObj.replay.actions.push(action);
                 } catch (e) {
-                    hjow_error(e);
+                    h.showError(e);
                     selfObj.replay = null;
                 }
             }
@@ -3594,7 +3612,7 @@ class XCardGameEngine extends ModuleObject {
             selfObj.payHere(playerUniqId, selectedCardVal[0]);
         };
         selfAny.events.game.btn_game_stop = function () {
-            selfObj.resultReason = hjow_trans('The user stop the game.');
+            selfObj.resultReason = hjow_trans('The user stop the game.') + ' (' + hjow_trans('Unofficial Game') + ')';
             selfObj.finishGame(false);
         };
         selfAny.events.hide = {};
@@ -3815,6 +3833,7 @@ class XCardGameEngine extends ModuleObject {
         newLangSet.stringTable.set("How to play", "게임 방법");
         newLangSet.stringTable.set("Some features will be applied after restart.", "일부 기능은 재시작 후 적용됩니다.");
         newLangSet.stringTable.set("The user stop the game.", "사용자가 게임을 중단시켰습니다.");
+        newLangSet.stringTable.set("Unofficial Game", "비공식 게임");
         newLangSet.stringTable.set("The player [[PLAYER]] does not have any card.", "플레이어 '[[PLAYER]]' 이/가 보유한 카드가 없습니다.");
         newLangSet.stringTable.set("The deck is empty.", "덱에 카드가 없습니다.");
         newLangSet.stringTable.set("The player '[[PLAYER]]' take a card from the deck.", "플레이어 '[[PLAYER]]' 가 덱에서 카드를 가져갑니다.");
@@ -4046,7 +4065,7 @@ class XCardReplayEngine extends XCardGameEngine {
             this.resultReason = jsonObj.reason;
 
         } catch (e) {
-            hjow_error(e, true);
+            h.showError(e, true);
             return;
         }
         

@@ -124,6 +124,15 @@ function hjow_alert(obj, title) {
 
 h.alert = hjow_alert;
 
+function hjow_toast(content) {
+    if(h.getPlatform() == 'android') {
+        XCardInterface.toast(content);
+        return;
+    }
+    $.toast(content);
+}
+h.toast = hjow_toast;
+
 function hjow_prepareDialogAlert() {
     if ($('.div_hjow_dialog_alert').length <= 0) {
         var logDialogHTML = "<div class='div_hjow_dialog_alert' style='display: none;' title='Alert'>";
@@ -253,7 +262,7 @@ function hjow_getOnLocalStorage(key) {
     try {
         return localStorage.getItem(key);
     } catch (e) {
-        hjow_error(e);
+        h.showError(e);
         return null;
     }
 }
@@ -530,7 +539,7 @@ function hjow_toStaticHTML(htmlStr) {
         if (typeof (toStaticHTML) != 'undefined' && toStaticHTML != null) return toStaticHTML(htmlStr);
         return htmlStr;
     } catch (e) {
-        hjow_error(e);
+        h.showError(e);
         return htmlStr;
     }
 };
@@ -591,7 +600,7 @@ function hjow_findEngine(uniqueId) {
             var engineOne = h.engine[idx]; // getUniqueId
             if (uniqueId == engineOne.getUniqueId()) return engineOne;
         } catch (e) {
-            hjow_error(e);
+            h.showError(e);
         }
     }
     return null;
@@ -715,7 +724,7 @@ h.ads.check = hjow_checkAdOn;
 
 function hjow_setAds(turnYn) {
     try {
-        XCardInterface.setAd(String(turnYn));
+        if(typeof(XCardInterface) != 'undefined') XCardInterface.setAd(String(turnYn));
     } catch(e) {
         h.log(e);
     }

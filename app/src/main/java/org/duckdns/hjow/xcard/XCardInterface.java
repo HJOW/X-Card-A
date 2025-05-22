@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
 /** 자바스크립트에서 XCardInterface 이름으로 이 객체에 액세스하여, 아래 메소드들을 호출할 수 있음 */
 public class XCardInterface {
@@ -63,5 +64,10 @@ public class XCardInterface {
     public void openURL(String url) {
         Log.i("XCardInterface", "openURL called - " + url);
         if(url != null && activity != null) activity.openURL(url);
+    }
+
+    @JavascriptInterface
+    public void toast(String content) {
+        Toast.makeText(ctx, content, content.length() >= 50 ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
     }
 }

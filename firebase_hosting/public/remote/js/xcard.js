@@ -362,7 +362,7 @@ var hjow_languageSets = [];
 var hjow_selectedLocale = null;
 var hjow_langSelectFirst = true;
 function hjow_getCurrentLanguageSet() {
-    var browserLocale = hjow_getLocaleInfo();
+    var browserLocale = h.getLocaleInfo();
     if (hjow_selectedLocale != null) {
         for (var ldx = 0; ldx < hjow_languageSets.length; ldx++) {
             if (hjow_selectedLocale == hjow_languageSets[ldx].locale || hjow_selectedLocale == hjow_languageSets[ldx].localeAlt) {
@@ -379,18 +379,21 @@ function hjow_getCurrentLanguageSet() {
         for (var ldx = 0; ldx < hjow_languageSets.length; ldx++) {
             if (currentLocale[idx] == hjow_languageSets[ldx].locale || currentLocale[idx] == hjow_languageSets[ldx].localeAlt) {
                 hjow_selectedLocale = hjow_languageSets[ldx].locale;
+                jq('html').attr('lang', hjow_selectedLocale);
                 return hjow_languageSets[ldx];
             }
         }
     }
     if (hjow_langSelectFirst) {
         hjow_selectedLocale = "en";
+        jq('html').attr('lang', hjow_selectedLocale);
         hjow_langSelectFirst = false; // 혹시나 모를 무한반복 방지
         return hjow_getCurrentLanguageSet();
     }
     return null;
 }
 ;
+h.getCurrentLanguageSet = hjow_getCurrentLanguageSet;
 function hjow_trans(target) {
     var langSet = hjow_getCurrentLanguageSet();
     if (langSet == null) {
@@ -400,6 +403,7 @@ function hjow_trans(target) {
     return langSet.translate(target);
 }
 ;
+h.trans = hjow_trans;
 var ModuleObject = /** @class */ (function (_super) {
     __extends(ModuleObject, _super);
     function ModuleObject(name, desc) {
@@ -1037,7 +1041,7 @@ function hjow_orderPlayerList(players, gameMode) {
         hjow_removeItemFromArray(temps, maxIdx);
         preventInfLoop++;
         if (preventInfLoop >= 1000 * Math.max(temps.length, 1)) {
-            hjow_error("Infinite Loop Detected");
+            h.showError("Infinite Loop Detected");
             break;
         }
     }
@@ -1295,7 +1299,7 @@ var XCardAIPlayer = /** @class */ (function (_super) {
                     return; // 시간 제한이 지났는지 확인 (지났으면 연산 중단)
                 preventInfLoop++;
                 if (preventInfLoop >= 1000 * Math.max(availableActions.length, 1)) {
-                    hjow_error("Infinite Loop Detected");
+                    h.showError("Infinite Loop Detected");
                     break;
                 }
             }
@@ -2053,7 +2057,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         if (additionalRefreshFunction === void 0) { additionalRefreshFunction = null; }
         if (debugMode === void 0) { debugMode = false; }
         var _this = _super.call(this, "X Card", "X Card Game Core Engine") || this;
-        _this.version = "1.1.4";
+        _this.version = "1.1.6";
         _this.placeArea = null;
         _this.gameModeList = [];
         _this.gameModeIndex = 0;
@@ -2080,7 +2084,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         _this.debugMode = false;
         _this.addiRefFunc = null;
         if (typeof (plcArea) != 'string') {
-            hjow_error('The parameter should be a string which is jQuery-selector form.');
+            h.showError('The parameter should be a string which is jQuery-selector form.');
             return _this;
         }
         _this.placeArea = String(plcArea);
@@ -2091,7 +2095,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         _this.addiRefFunc = additionalRefreshFunction;
         _this.debugMode = debugMode;
         if (debugMode) {
-            hjow_putEngine(_this);
+            h.putEngine(_this);
             jq('body').css('overflow-y', 'scroll');
         }
         return _this;
@@ -2223,9 +2227,9 @@ var XCardGameEngine = /** @class */ (function (_super) {
         jq('body').append("<div class='hjow_xcard_how_to_play_dialog' style='width: 400px; height: 300px; display: none' title=\"" + h.serializeString(hjow_trans("How to play")) + "\"></div>");
         this.prepareHowToPlayDialog();
         var selfObj = this;
-        hjow_prepareDialogLog();
-        hjow_prepareDialogAlert();
-        hjow_workOnScreenSizeChanged(function () {
+        h.prepareDialogLog();
+        h.prepareDialogAlert();
+        h.workOnScreenSizeChanged(function () {
             selfObj.refreshPage(false);
         });
         this.refreshPage();
@@ -2234,6 +2238,16 @@ var XCardGameEngine = /** @class */ (function (_super) {
     XCardGameEngine.prototype.initTheme = function (themeType, atFirst) {
         if (themeType === void 0) { themeType = 0; }
         if (atFirst === void 0) { atFirst = false; }
+        jq(this.placeArea).removeClass("predict_size_tablet").removeClass("predict_size_phone");
+        jq('html').removeClass("predict_size_tablet").removeClass("predict_size_phone");
+        if (h.getSizeType() == 'phone') {
+            jq(this.placeArea).addClass("predict_size_phone");
+            jq('html').addClass("predict_size_phone");
+        }
+        else {
+            jq(this.placeArea).addClass("predict_size_tablet");
+            jq('html').addClass("predict_size_tablet");
+        }
         if (themeType == 0) {
             this.initTheme(1, atFirst);
             this.initTheme(2, atFirst);
@@ -2252,7 +2266,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         try {
             var themes = [];
             var parsedObj = JSON.parse(themeStr);
-            if (hjow_isArray(parsedObj)) {
+            if (h.isArray(parsedObj)) {
                 for (var pdx = 0; pdx < parsedObj.length; pdx++) {
                     var theme = new Properties();
                     theme.fromPlainObject(parsedObj[pdx]);
@@ -2280,7 +2294,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
             }
         }
         catch (e) {
-            hjow_error(e);
+            h.showError(e);
         }
     };
     ;
@@ -2523,7 +2537,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
             curIdx++;
             preventInfLoop++;
             if (preventInfLoop >= 1000 * Math.max(this.timers.length, 1)) {
-                hjow_error("Infinite Loop Detected");
+                h.showError("Infinite Loop Detected");
                 break;
             }
         }
@@ -2570,7 +2584,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
             this.properties.fromJSON(localStoreStr);
         }
         catch (e) {
-            hjow_error(e);
+            h.showError(e);
         }
     };
     ;
@@ -2675,7 +2689,8 @@ var XCardGameEngine = /** @class */ (function (_super) {
     XCardGameEngine.prototype.refreshPage = function (heavyRefresh) {
         if (heavyRefresh === void 0) { heavyRefresh = true; }
         this.applyInputs();
-        if (h.getPlatform() == 'android' || h.getPlatform() == 'browser' || h.getPlatform() == 'windowsuniversal') {
+        var platforms = h.getPlatform();
+        if (platforms == 'android' || platforms == 'browser' || platforms == 'windowsuniversal') {
             jq(this.placeArea).find('.selalter_option').off('click');
         }
         var inHeight = window.innerHeight - 20;
@@ -2744,6 +2759,8 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
         if (this.addiRefFunc != null)
             this.addiRefFunc(heavyRefresh);
+        // 외부 이동 함수 함수형으로 대체
+        h.replaceLinks();
     };
     ;
     XCardGameEngine.prototype.refreshMain = function () {
@@ -3167,7 +3184,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         if (customLocaleOpt == null || customLocaleOpt == '')
             customLocaleOpt = hjow_selectedLocale;
         if (hjow_selectedLocale == null || typeof (hjow_selectedLocale) == 'undefined') {
-            var browserLocale = hjow_getLocaleInfo();
+            var browserLocale = h.getLocaleInfo();
             if (!(typeof (browserLocale) == 'undefined' || browserLocale == null)) {
                 var currentLocale = hjow_makeArrayCompatible(browserLocale);
                 if (currentLocale == null || currentLocale.length <= 0)
@@ -3704,7 +3721,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
                 this.replay.actions.push(action);
             }
             catch (e) {
-                hjow_error(e);
+                h.showError(e);
                 this.replay = null;
             }
         }
@@ -3912,7 +3929,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
                     selfObj.replay.actions.push(action);
                 }
                 catch (e) {
-                    hjow_error(e);
+                    h.showError(e);
                     selfObj.replay = null;
                 }
             }
@@ -3934,7 +3951,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
             selfObj.payHere(playerUniqId, selectedCardVal[0]);
         };
         selfAny.events.game.btn_game_stop = function () {
-            selfObj.resultReason = hjow_trans('The user stop the game.');
+            selfObj.resultReason = hjow_trans('The user stop the game.') + ' (' + hjow_trans('Unofficial Game') + ')';
             selfObj.finishGame(false);
         };
         selfAny.events.hide = {};
@@ -4150,6 +4167,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         newLangSet.stringTable.set("How to play", "게임 방법");
         newLangSet.stringTable.set("Some features will be applied after restart.", "일부 기능은 재시작 후 적용됩니다.");
         newLangSet.stringTable.set("The user stop the game.", "사용자가 게임을 중단시켰습니다.");
+        newLangSet.stringTable.set("Unofficial Game", "비공식 게임");
         newLangSet.stringTable.set("The player [[PLAYER]] does not have any card.", "플레이어 '[[PLAYER]]' 이/가 보유한 카드가 없습니다.");
         newLangSet.stringTable.set("The deck is empty.", "덱에 카드가 없습니다.");
         newLangSet.stringTable.set("The player '[[PLAYER]]' take a card from the deck.", "플레이어 '[[PLAYER]]' 가 덱에서 카드를 가져갑니다.");
@@ -4390,7 +4408,7 @@ var XCardReplayEngine = /** @class */ (function (_super) {
             this.resultReason = jsonObj.reason;
         }
         catch (e) {
-            hjow_error(e, true);
+            h.showError(e, true);
             return;
         }
         h.log(hjow_trans("The game is preparing to start."));

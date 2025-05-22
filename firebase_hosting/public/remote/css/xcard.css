@@ -22,6 +22,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+html {
+    font-size: 10px;
+}
+
+html.predict_size_tablet {
+    font-size: 14px;
+}
+
 .hjow_xcard_style_place {
     min-width: 790px;
     min-height: 590px;
@@ -43,7 +51,7 @@ limitations under the License.
 }
 
 .hjow_xcard_style_place td.td_game_title h2, td.td_game_title h1 {
-    font-size: 25px;
+    font-size: 2rem;
 }
 
 .hjow_xcard_style_place .td_game_below {
@@ -70,7 +78,7 @@ limitations under the License.
 }
 
 .hjow_xcard_style_place button.btn_game_start {
-    font-size: 20px;
+    font-size: 1.8rem;
 }
 
 .hjow_xcard_style_place .td_player_list {
@@ -225,7 +233,7 @@ limitations under the License.
 }
 
 .hjow_xcard_style_place .toolbar button {
-    font-size: 10px;
+    font-size: 1rem;
     max-height: 15px;
 }
 
@@ -235,7 +243,7 @@ limitations under the License.
 
 .hjow_xcard_style_place .toolbar span {
     margin: 0;
-    font-size: 10px;
+    font-size: 1rem;
 }
 
 .hjow_xcard_style_place .replay_result {
@@ -304,7 +312,7 @@ limitations under the License.
 }
 
 .hjow_xcard_style_place .setting_element p, .hjow_xcard_style_place .setting_element pre {
-    font-size: 11px;
+    font-size: 1.1rem;
 }
 
 .hjow_xcard_style_place .setting_element.setting_buttons_bottom {
@@ -313,7 +321,7 @@ limitations under the License.
 
 .hjow_xcard_style_place .div_game_mode_desc {
     padding: 5px 5px 5px 5px;
-    font-size: 11px;
+    font-size: 1.1rem;
 }
 
 .hjow_xcard_style_place .tx_theme_script {
@@ -323,11 +331,36 @@ limitations under the License.
 }
 
 .hjow_xcard_style_place .finish_result {
-    font-size: 11px;
+    font-size: 1.1rem;
     font-weight: bold;
 }
 
 
 .hjow_xcard_style_place .finish_result.lb_finish_result {
     font-weight: normal;
+}
+
+.hjow_xcard_style_place span.label {
+    font-size: 1.3rem;
+}
+
+.hjow_xcard_style_place div, .hjow_xcard_style_place span, .hjow_xcard_style_place p, .hjow_xcard_style_place pre
+, .hjow_xcard_style_place input, .hjow_xcard_style_place select, .hjow_xcard_style_place textarea, .hjow_xcard_style_place button {
+    font-size: 1.1rem;
+}
+
+.hjow_xcard_style_place button.btn_hide_reveal {
+    font-size: 2rem;
+}
+
+.div_hjow_dialog_console textarea.tf_hjow_console {
+    font-size: 0.9rem;
+}
+
+.hjow_xcard_style_place span.e075.label {
+    font-size: 1.1rem;
+}
+
+.hjow_xcard_style_place button.btn_end {
+    font-size: 1.5rem;
 }

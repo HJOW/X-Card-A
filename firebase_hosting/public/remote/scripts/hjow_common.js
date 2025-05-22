@@ -124,6 +124,15 @@ function hjow_alert(obj, title) {
 
 h.alert = hjow_alert;
 
+function hjow_toast(content) {
+    if(h.getPlatform() == 'android') {
+        XCardInterface.toast(content);
+        return;
+    }
+    $.toast(content);
+}
+h.toast = hjow_toast;
+
 function hjow_prepareDialogAlert() {
     if ($('.div_hjow_dialog_alert').length <= 0) {
         var logDialogHTML = "<div class='div_hjow_dialog_alert' style='display: none;' title='Alert'>";
@@ -168,6 +177,50 @@ function hjow_prepareJQuery() {
 
 h.prepareJQuery = hjow_prepareJQuery;
 
+/** 화면 이동 (플랫폼에 따라 다르게 동작) */
+function hjow_goto(url, newDialog) {
+    var platform = h.getPlatform();
+    if(platform == 'android') {
+        XCardInterface.openURL(url);
+        return;
+    }
+
+    if(newDialog) { window.open(url, '_blank', 'location=yes,toolbars=yes,status=yes'); return; }
+    location.href = url;
+}
+h.openURL = hjow_goto;
+
+/** 페이지 이동 링크를 함수 형태로 변환 */
+function hjow_replaceLinks() {
+    $('a').each(function(){
+        var aObj  = $(this);
+        var hrefs = aObj.attr('href');
+
+        if(aObj.is('.replaced_links')) return;
+        if(hrefs == null || typeof (hrefs) == 'undefined') return;
+
+        if(hrefs.indexOf('http://') == 0 || hrefs.indexOf('https://') == 0) {
+            aObj.attr('href', '#');
+            aObj.attr('data-gotourl', hrefs);
+            aObj.on('click', function() {
+                var target = $(this).attr('target');
+                var newDialog = false;
+
+                if(target == null || typeof (target) == 'undefined') target = '';
+
+                if(target == '') newDialog = false;
+                else if(target == '_blank') newDialog = true;
+                else if(target == '_self') newDialog = false;
+                else newDialog = true;
+
+                h.openURL($(this).attr('data-gotourl'), newDialog);
+            });
+            aObj.addClass('replaced_links');
+        }
+    });
+}
+h.replaceLinks = hjow_replaceLinks;
+
 /** HTML 태그에 사용되는 기호 <, > 변환, 줄띄움도 변환환 */
 function hjow_htmlForm(str) {
     var results = h.replaceStr(str, "<", "&lt;");
@@ -209,7 +262,7 @@ function hjow_getOnLocalStorage(key) {
     try {
         return localStorage.getItem(key);
     } catch (e) {
-        hjow_error(e);
+        h.showError(e);
         return null;
     }
 }
@@ -486,7 +539,7 @@ function hjow_toStaticHTML(htmlStr) {
         if (typeof (toStaticHTML) != 'undefined' && toStaticHTML != null) return toStaticHTML(htmlStr);
         return htmlStr;
     } catch (e) {
-        hjow_error(e);
+        h.showError(e);
         return htmlStr;
     }
 };
@@ -547,7 +600,7 @@ function hjow_findEngine(uniqueId) {
             var engineOne = h.engine[idx]; // getUniqueId
             if (uniqueId == engineOne.getUniqueId()) return engineOne;
         } catch (e) {
-            hjow_error(e);
+            h.showError(e);
         }
     }
     return null;
@@ -596,7 +649,7 @@ function hjow_supportES5() {
 
 h.supportES5 = hjow_supportES5;
 
-/** 디바이스 정보 반환, 이걸로 안드로이드 / 브라우저 등을 판별별 */
+/** 디바이스 정보 반환, 이걸로 안드로이드 / 브라우저 등을 판별 */
 var hjow_getDeviceInfo = function() {
     if (typeof (device) == 'undefined') {
         // cordova 사용 불가 시
@@ -605,11 +658,13 @@ var hjow_getDeviceInfo = function() {
             var infos = {};
             infos.platform = XCardInterface.getPlatform();
             infos.build    = XCardInterface.getBuildNumber();
+            infos.sizeType = XCardInterface.getDeviceSizeType();
             return infos;
         } catch(e) {
             return {
                 platform: 'browser',
-                build : 0
+                build : 0,
+                sizeType : 'tablet'
             };
         }
     }
@@ -634,6 +689,15 @@ function hjow_getBuildNumber() {
     return parseInt(deviceObj.build);
 }
 h.getBuildNumber = hjow_getBuildNumber;
+
+
+/** 사이즈 타입 반환 (undefined, phone, tablet) */
+function hjow_getSizeType() {
+    var deviceObj = h.getDeviceInfo();
+    if(deviceObj.sizeType == null || typeof (deviceObj.sizeType) == 'undefined') return 'tablet';
+    return deviceObj.sizeType;
+}
+h.getSizeType = hjow_getSizeType;
 
 /** 앱 종료 시도 */
 function hjow_tryExit() {
@@ -660,7 +724,7 @@ h.ads.check = hjow_checkAdOn;
 
 function hjow_setAds(turnYn) {
     try {
-        XCardInterface.setAd(String(turnYn));
+        if(typeof(XCardInterface) != 'undefined') XCardInterface.setAd(String(turnYn));
     } catch(e) {
         h.log(e);
     }

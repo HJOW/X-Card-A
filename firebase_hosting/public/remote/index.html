@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
         <link rel="stylesheet" type="text/css" href="font/font.css"/>
         <link rel="stylesheet" type="text/css" href="css/jquery.toast.min.css"/>
         <link rel="stylesheet" type="text/css" href="css/index.css"/>
@@ -68,6 +69,9 @@
                 });
 
                 // XCardInterface 이름으로 XCardInterface 클래스 메소드에 액세스 가능 (@JavascriptInterface 어노테이션 있는 메소드만 가능)
+
+                // 외부 이동 링크 함수형으로 바꾸기
+                h.replaceLinks();
             });
         </script>
     </head>
