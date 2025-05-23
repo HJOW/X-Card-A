@@ -8,12 +8,27 @@
   "main": "index.html",
   "scripts": {
     "build": "tsc --build",
-    "clean": "tsc --clean"
+    "clean": "tsc --clean",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.8.1",
+    "@electron-forge/maker-deb": "^7.8.1",
+    "@electron-forge/maker-rpm": "^7.8.1",
+    "@electron-forge/maker-squirrel": "^7.8.1",
+    "@electron-forge/maker-zip": "^7.8.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
+    "@electron-forge/plugin-fuses": "^7.8.1",
+    "@electron/fuses": "^1.8.0",
     "@types/jest": "^29.5.14",
     "babel-cli": "^6.26.0",
+    "electron": "^36.3.1",
     "ts-jest": "^29.3.4",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1"
   }
 }

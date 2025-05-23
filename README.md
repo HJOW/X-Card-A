@@ -39,7 +39,7 @@
    The cards used in this game are represented by numbers between -1 and 10, and three symbols (＋－×);
    As such, there are 33 different types of cards in a set of cards.
    
-   Example)
+   Example
       Player 1 have... [＋1] [＋5] [－4] [×(-1)]
    
    
@@ -90,7 +90,7 @@
    Calculations are performed in order, regardless of operator.
    
    
-   Example)
+   Example
        Player "A" 's "placed" cards : [＋5][－5][－6][－6][＋4][×4]
        Point calculation : (0 ＋ 5 － 5 － 6 － 6 ＋4) × 4 = －32
        
@@ -102,10 +102,36 @@
 
 ## 앱 빌드 시 참고사항
 
+   * 핵심 웹 소스는 web 폴더 안에 있음.
+   * 작업 전 최초 1회, web 폴더 안에서 다음 명령어를 수행해야 함
+
+     npm install
+
+   * 작업 전 최초 1회, firebase_hosting 폴더 안에서 위와 동일한 명령어를 수행해야 함
+
    * ts 파일이 존재하는 스크립트의 경우 js 대신 ts 파일을 수정 (타입스크립트 사용)
-   * 터미널로 assets 폴더에 가서 다음 명령어를 수행 후 안드로이드 스튜디오 실행
+   * 터미널로 web 폴더에 가서 다음 명령어를 수행하여 타입스크립트 컴파일일
 
      npm run build
+
+   * 작업 및 위 명령어까지 수행 후, web 폴더 내 파일들을 전부 복사해야 함. 이 때 다음 파일과 폴더는 제외하고 모두 복사
+
+      node_modules
+      package.json
+      package-lock.json
+      tsconfig.json
+      tsconfig.tsbuildinfo
+
+      복사한 파일은 다음 경로에 붙여넣어야 함.
+
+      /firebase_hosting/public/remote/
+      /app/src/main/assets/
+   
+   * 웹호스팅 배포를 위해, firebase_hosting 폴더에서 다음 명령어 실행
+
+     npm run deploy
+
+   * 여기까지 수행한 후 안드로이드 스튜디오 실행하여 Gradle Sync 및 aab 빌드
 
 ## 사용된 외부 라이브러리 (Dependencies)
    * jQuery : https://jquery.com/
