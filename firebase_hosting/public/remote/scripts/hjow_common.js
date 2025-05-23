@@ -677,8 +677,8 @@ h.getDeviceInfo = hjow_getDeviceInfo;
 /** 위 hjow_getDeviceInfo 함수를 통해 플랫폼 이름만 찾아 소문자로 반환 */
 function hjow_getPlatform() {
     var deviceObj = h.getDeviceInfo();
-    // return String(deviceObj.platform).toLowerCase(); // windows / android / ios / browser
-    return 'android' // TODO
+    return String(deviceObj.platform).toLowerCase(); // windows / android / ios / browser
+    // return 'android';
 };
 
 h.getPlatform = hjow_getPlatform;
