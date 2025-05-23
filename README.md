@@ -121,8 +121,10 @@
       package-lock.json
       tsconfig.json
       tsconfig.tsbuildinfo
+      forge.config.js
+      .vscode
 
-      복사한 파일은 다음 경로에 붙여넣어야 함.
+      복사한 파일은 다음 경로에 모두 붙여넣어야 함.
 
       /firebase_hosting/public/remote/
       /app/src/main/assets/
