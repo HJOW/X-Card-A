@@ -22,7 +22,7 @@ limitations under the License.
 */
 
 .invisible {
-    display: none;
+    display: none !important;
 }
 
 body {
@@ -52,10 +52,10 @@ div.page, table.full, td.full, button.full {
 
 .min_size, .layout {
     min-width: 640px;
-    min-height: 480px;
+    min-height: 300px;
 }
 .min_height {
-    min-height: 480px;
+    min-height: 300px;
 }
 .min_width_100 {
     min-width: 100px;

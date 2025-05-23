@@ -96,7 +96,7 @@ html.predict_size_tablet {
 }
 
 .hjow_xcard_style_place .player_list_div table.player_list tr.tr_player {
-    height: 80px;
+    height: 70px;
 }
 
 .hjow_xcard_style_place .player_list_div table.player_list tr .td_player_control {
@@ -155,6 +155,10 @@ html.predict_size_tablet {
 
 .hjow_xcard_style_place .player_arena_one_line_layout {
     height: 30px;
+}
+
+.hjow_xcard_style_place table {
+    border-collapse: collapse;
 }
 
 .hjow_xcard_style_place table.table_player_arena_each.current_turn {
@@ -363,4 +367,9 @@ html.predict_size_tablet {
 
 .hjow_xcard_style_place button.btn_end {
     font-size: 1.5rem;
+}
+
+.hjow_xcard_style_place button.btn_end_2 {
+    font-size: 1.3rem;
+    margin-left: 20px;
 }

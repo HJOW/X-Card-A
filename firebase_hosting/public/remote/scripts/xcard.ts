@@ -1700,7 +1700,7 @@ var hjow_xcard_addGameMode = null;
 var hjow_xcard_addPlayerType = null;
 
 class XCardGameEngine extends ModuleObject {
-    protected version: string = "1.1.6";
+    protected version: string = "1.1.7";
     protected placeArea: string = null;
     protected gameModeList: XCardGameMode[] = [];
     protected gameModeIndex: number = 0;
@@ -1719,6 +1719,7 @@ class XCardGameEngine extends ModuleObject {
     protected pauseTimeLimit: boolean = false;
     protected showResult: boolean = false;
     protected resultReason: string = null;
+    protected unofficialGame: boolean = false;
     protected turnChanging: boolean = false;
     protected actPlayerTurnRequest: boolean = false;
     protected actPlayerTurnStopRequest: boolean = false;
@@ -2218,6 +2219,7 @@ class XCardGameEngine extends ModuleObject {
         var finishGameReasonIfExists: string = this.checkFinishGameCondition();
         if (finishGameReasonIfExists != null) {
             this.resultReason = finishGameReasonIfExists;
+            this.unofficialGame = false;
             this.finishGame(true);
             return;
         }
@@ -2283,8 +2285,6 @@ class XCardGameEngine extends ModuleObject {
         
         this.refreshPage(false);
         gameMode.afterResultPage(this, this.players, this.deck);
-        this.replay = null; // 화면 리프레시 이후에 리플레이 초기화 (결과 화면에서 리플레이 JSON 출력 후에 초기화하기 위함)
-        this.resultReason = null;
     };
     public isDebugMode(): boolean {
         return this.debugMode;
@@ -2331,6 +2331,8 @@ class XCardGameEngine extends ModuleObject {
             jq(this.placeArea).find('.page:not(.page_result)').hide();
             jq(this.placeArea).find('.page_result').html(hjow_toStaticHTML(this.resultPageHTML()));
             this.refreshResult();
+            if(this.unofficialGame) jq(this.placeArea).find('.span_finish_officials').removeClass('invisible');
+            else jq(this.placeArea).find('.span_finish_officials').addClass('invisible');
             jq(this.placeArea).find('.page_result').show();
         } else if (this.showSettings && (!this.debugMode)) {
             jq(this.placeArea).find('.page:not(.page_set)').hide();
@@ -2369,7 +2371,7 @@ class XCardGameEngine extends ModuleObject {
         results += "<table class='full player_list element e138'>" + "\n";
         if (this.players.length <= 0) {
             results += "   <tr class='tr_player pbasic_none  element'>" + "\n";
-            results += "       <td class='td_player_none element'>" + "\n";
+            results += "       <td class='td_player_none element' style='border: 0;'>" + "\n";
             results += "          <span class='label element'>" + h.serializeXMLString(hjow_trans("Please add player to play.")) + "</span>" + "\n";
             results += "       </td>" + "\n";
             results += "   </tr>" + "\n";
@@ -2377,7 +2379,7 @@ class XCardGameEngine extends ModuleObject {
             for (var idx: number = 0; idx < this.players.length; idx++) {
                 var currentPlayer: XCardPlayer = this.players[idx];
                 results += "   <tr class='tr_player element pbasic_" + h.serializeString(currentPlayer.getUniqueId()) + "'>" + "\n";
-                results += "       <td class='td_player element'>" + "\n";
+                results += "       <td class='td_player element' style='border: 0;'>" + "\n";
                 results += this.eachPlayerMainHTML(currentPlayer);
                 results += "       </td>" + "\n";
                 results += "   </tr>" + "\n";
@@ -2385,7 +2387,7 @@ class XCardGameEngine extends ModuleObject {
         }
         
         results += "   <tr class='tr_player_empty element e139'>" + "\n";
-        results += "       <td class='td_player_empty td_player_control element e140'>" + "\n";
+        results += "       <td class='td_player_empty td_player_control element e140' style='border: 0; height: 35px;'>" + "\n";
         results += "          <select class='sel_player_type player_control element e141'>" + "\n";
         for (var tdx = 0; tdx < this.playerTypes.length; tdx++) {
             var playerType: XCardPlayerCreator = this.playerTypes[tdx];
@@ -2415,7 +2417,7 @@ class XCardGameEngine extends ModuleObject {
             removeBtn.addClass('disabled');
         }
 
-        var heightVal: number = jq(this.placeArea).height();
+        var heightVal: number = window.innerHeight - 10; // jq(this.placeArea).height();
         heightVal = heightVal - jq(this.placeArea).find('.toolbar').height() - jq(this.placeArea).find('.td_game_start').height();
         heightVal = heightVal - 20;
         if (heightVal < 200) heightVal = 200;
@@ -2425,17 +2427,16 @@ class XCardGameEngine extends ModuleObject {
         var minHeight = heightVal - 300 >= 100 ? heightVal - 300 : 100;
         var maxHeight = heightVal - 100;
         var trPlayerList  = jq(this.placeArea).find('.tr_player_list');
-        var tdPlayerList  = trPlayerList.find('.td_player_list'); // TODO
+        var tdPlayerList  = trPlayerList.find('.td_player_list');
         var divPlayerList = tdPlayerList.find('.player_list_div');
-        
+
         divPlayerList.css('min-height', minHeight + 'px');
         divPlayerList.css('max-height', maxHeight + 'px');
         trPlayerList.css('min-height', (minHeight - 1) + 'px');
         trPlayerList.css('max-height', (maxHeight + 1) + 'px');
+        trPlayerList.css('height', (heightVal - 80) + 'px');
         tdPlayerList.css('min-height', (minHeight - 1) + 'px');
         tdPlayerList.css('max-height', (maxHeight + 1) + 'px');
-        // divPlayerList.height(minHeight);
-        // tdPlayerList.height(divPlayerList.height() + 1);
 
         var selGameMode = jq(this.placeArea).find('.sel_game_mode');
         selGameMode.find('option').remove();
@@ -2512,7 +2513,7 @@ class XCardGameEngine extends ModuleObject {
         jq(this.placeArea).find(".table_player_arena_each.pplace_" + h.serializeString(currentPlayer.getUniqueId()) + "").addClass('current_turn');
         jq(this.placeArea).find('.deck_lefts').text(this.deck.length);
 
-        // 플레이어 루프프
+        // 플레이어 루프
         for (var pdx = 0; pdx < this.players.length; pdx++) {
             var playerOne: XCardPlayer = this.players[pdx];
             var thisTurn: boolean = (pdx == this.turnPlayerIndex); // 현재차례여부
@@ -2674,25 +2675,28 @@ class XCardGameEngine extends ModuleObject {
 
     /** 게임 상태 새로고침 후반부 작업 */
     protected refreshGameAfterTime() {
+        var winHeight = window.innerHeight - 50;
+
         // 세로 길이이 조절
-        var heightVal: number = jq(this.placeArea).height() - 20; // window.innerHeight;
-        if (heightVal < 300) heightVal = 300;
+        var heightVal: number = jq(this.placeArea).height() - 30; // window.innerHeight - 30; // jq(this.placeArea).height() - 20;
+        if(heightVal > winHeight) heightVal = winHeight;
+        if (heightVal < 200) heightVal = 200;
 
         // 가로 길이 조절
         var widthVal: number = jq(this.placeArea).width() - 10; // window.innerWidth;
         if (widthVal < 500) widthVal = 500;
 
-        var minimumPad: number = 20; // 공통 여백 크기
+        var minimumPad: number = 30; // 공통 여백 크기
+        var minHeight: number = heightVal - minimumPad - 100;
+        var maxHeight: number = heightVal - minimumPad - 40;
 
-        jq(this.placeArea).find('.player_arena_div').css('min-height', heightVal - 100 - minimumPad + 'px');
-        jq(this.placeArea).find('.player_arena_div').css('max-height', heightVal - minimumPad + 'px');
-        jq(this.placeArea).find('.player_arena_div').css('max-width', widthVal - 5 + 'px');
+        jq(this.placeArea).find('.player_arena_div').css('min-height', minHeight + 'px');
+        jq(this.placeArea).find('.player_arena_div').css('max-height', maxHeight + 'px');
+        jq(this.placeArea).find('.player_arena_div').css('max-width', (widthVal - 5) + 'px');
 
-        jq(this.placeArea).find('.div_player_arena_each').css('min-height', heightVal - 110 - minimumPad + 'px');
-        jq(this.placeArea).find('.div_player_arena_each').css('max-height', heightVal - minimumPad + 'px');
-
-        jq(this.placeArea).find('.table_player_arena_each').css('min-height', heightVal - 200 - minimumPad + 'px');
-        jq(this.placeArea).find('.table_player_arena_each').css('max-height', heightVal - minimumPad + 'px');
+        jq(this.placeArea).find('.div_player_arena_each').css('min-height', (minHeight - 10) + 'px');
+        jq(this.placeArea).find('.div_player_arena_each').css('max-height', (maxHeight - 5) + 'px');
+        jq(this.placeArea).find('.table_player_arena_each').css('height', (maxHeight - 15) + 'px');
 
         jq(this.placeArea).find('.table_player_arena_each').each(function () {
             var heightLefts: number = jq(jq(this).find('.player_arena_one_line_layout')[0]).height() * 4;
@@ -2717,12 +2721,13 @@ class XCardGameEngine extends ModuleObject {
             jq(this.placeArea).find('select.need_alter').each(function () {
                 hjow_select_init(this);
             });
-            var insideHeight = jq(this.placeArea).find('.td_select_container').height();
-            if (insideHeight >= heightVal - 350) insideHeight = heightVal - 350;
-            jq(this.placeArea).find('.selalter').css('max-height', insideHeight - 5);
-            jq(this.placeArea).find('.selalter').css('height', insideHeight - 5);
-            // jq(selfObj.placeArea).find('.selalter').css('max-height', heightVal - 150 - 220);
-            // jq(selfObj.placeArea).find('.selalter').css('height', heightVal - 150 - 220);
+            jq(this.placeArea).find('.selalter').each(function() {
+                var selAlter = jq(this);
+                var insideHeight = selAlter.parents('.table_player_arena_each').height() - 130;
+                if (insideHeight >= heightVal - 100) insideHeight = heightVal - 150;
+                selAlter.css('max-height', insideHeight - 5);
+                selAlter.css('height', insideHeight - 5);
+            });
         }
     };
 
@@ -2979,7 +2984,7 @@ class XCardGameEngine extends ModuleObject {
         results += "       </td>" + "\n";
         results += "   </tr>" + "\n";
         results += "   <tr class='element e043'>" + "\n";
-        results += "       <td class='element e044 td_player_game_list min_height'>" + "\n";
+        results += "       <td class='element e044 td_player_game_list min_height' style='vertical-align: top;'>" + "\n";
         results += "          <div class='element e045 player_arena_div'>" + "\n";
         for (var idx = 0; idx < this.players.length; idx++) {
             var currentPlayer: XCardPlayer = this.players[idx];
@@ -3026,8 +3031,8 @@ class XCardGameEngine extends ModuleObject {
         results += "<table class='element e057 full layout'>" + "\n";
         results += "   <tr class='element e058' style='height: 80px;'>" + "\n";
         results += "      <td class='element e059'>" + "\n";
-        results += "         <h2 class='element e060' style='margin-bottom: 5px;'>" + h.serializeXMLString(hjow_trans("Game Finish")) + "</h2>" + "<br/>" + "\n";
-        results += "         <span class='element label e149 finish_result'>" + hjow_trans("Reason") + " : </span><span class='element label e150 finish_result lb_finish_result'></span>" + "\n";
+        results += "         <h2 class='element e060' style='margin-bottom: 5px; margin-right: 5px; display: inline-block;'>" + h.serializeXMLString(hjow_trans("Game Finish")) + "</h2>" + "<span class='span_finish_officials invisible' style='display: inline-block;'>" + hjow_trans('Unofficial Game') + "</span>" + "<br/>" + "\n";
+        results += "         <span class='element label e149 finish_result'>" + hjow_trans("Reason") + " : </span><span class='element label e150 finish_result lb_finish_result'></span><button type='button' class='element e085 btn_end_2'>" + h.serializeXMLString(hjow_trans("OK")) + "</button><br/>" + "\n";
         results += "         <h3 class='element e060' style='margin-bottom: 5px;'>" + h.serializeXMLString(hjow_trans("Result")) + "</h3>" + "\n";
         results += "      </td>" + "\n";
         results += "   </tr>" + "\n";
@@ -3084,7 +3089,7 @@ class XCardGameEngine extends ModuleObject {
             results += "          <span class='element e080 label'>" + h.serializeXMLString(hjow_trans("Point")) + "</span>" + "\n";
             results += "      </td>" + "\n";
             results += "      <td colspan='3' class='element e081'>" + "\n";
-            results += "          <input type='text' class='element e082 i_point' disabled='disabled'/>" + "\n";
+            results += "          <input type='text' class='element e082 i_point' disabled='disabled' style='text-align: right;'/>" + "\n";
             results += "      </td>" + "\n";
             results += "   </tr>" + "\n";
             results += "</table>";
@@ -3482,6 +3487,10 @@ class XCardGameEngine extends ModuleObject {
 
         this.reAllocateButtonEvent(pageArea.find('.btn_end'), function (compObj) {
             selfAny.events.result.title();
+        }); // btn_end_2
+
+        this.reAllocateButtonEvent(pageArea.find('.btn_end_2'), function (compObj) {
+            selfAny.events.result.title();
         });
 
         this.reAllocateButtonEvent(pageArea.find('.btn_show_replay'), function (compObj) {
@@ -3612,7 +3621,8 @@ class XCardGameEngine extends ModuleObject {
             selfObj.payHere(playerUniqId, selectedCardVal[0]);
         };
         selfAny.events.game.btn_game_stop = function () {
-            selfObj.resultReason = hjow_trans('The user stop the game.') + ' (' + hjow_trans('Unofficial Game') + ')';
+            selfObj.resultReason = hjow_trans('The user stop the game.');
+            selfObj.unofficialGame = true;
             selfObj.finishGame(false);
         };
         selfAny.events.hide = {};
@@ -3624,6 +3634,8 @@ class XCardGameEngine extends ModuleObject {
         };
         selfAny.events.result = {};
         selfAny.events.result.title = function () {
+            selfObj.replay = null;
+            selfObj.resultReason = null;
             selfObj.showSettings = false;
             selfObj.needHideScreen = false;
             selfObj.gameStarted = false;
@@ -4071,6 +4083,7 @@ class XCardReplayEngine extends XCardGameEngine {
         
         h.log(hjow_trans("The game is preparing to start."));
         this.lastMessage = "";
+        this.unofficialGame = false;
         this.gameStarted = true;
         this.refreshPage();
 

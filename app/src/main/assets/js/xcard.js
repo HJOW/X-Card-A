@@ -2828,7 +2828,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         var minHeight = heightVal - 300 >= 100 ? heightVal - 300 : 100;
         var maxHeight = heightVal - 100;
         var trPlayerList = jq(this.placeArea).find('.tr_player_list');
-        var tdPlayerList = trPlayerList.find('.td_player_list'); // TODO
+        var tdPlayerList = trPlayerList.find('.td_player_list');
         var divPlayerList = tdPlayerList.find('.player_list_div');
         divPlayerList.css('min-height', minHeight + 'px');
         divPlayerList.css('max-height', maxHeight + 'px');
@@ -2909,7 +2909,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         }
         jq(this.placeArea).find(".table_player_arena_each.pplace_" + h.serializeString(currentPlayer.getUniqueId()) + "").addClass('current_turn');
         jq(this.placeArea).find('.deck_lefts').text(this.deck.length);
-        // 플레이어 루프프
+        // 플레이어 루프
         for (var pdx = 0; pdx < this.players.length; pdx++) {
             var playerOne = this.players[pdx];
             var thisTurn = (pdx == this.turnPlayerIndex); // 현재차례여부
@@ -3049,22 +3049,26 @@ var XCardGameEngine = /** @class */ (function (_super) {
     ;
     /** 게임 상태 새로고침 후반부 작업 */
     XCardGameEngine.prototype.refreshGameAfterTime = function () {
+        var winHeight = window.innerHeight - 50;
         // 세로 길이이 조절
-        var heightVal = jq(this.placeArea).height() - 20; // window.innerHeight;
-        if (heightVal < 300)
-            heightVal = 300;
+        var heightVal = jq(this.placeArea).height() - 30; // window.innerHeight - 30; // jq(this.placeArea).height() - 20;
+        if (heightVal > winHeight)
+            heightVal = winHeight;
+        if (heightVal < 200)
+            heightVal = 200;
         // 가로 길이 조절
         var widthVal = jq(this.placeArea).width() - 10; // window.innerWidth;
         if (widthVal < 500)
             widthVal = 500;
-        var minimumPad = 20; // 공통 여백 크기
-        jq(this.placeArea).find('.player_arena_div').css('min-height', heightVal - 100 - minimumPad + 'px');
-        jq(this.placeArea).find('.player_arena_div').css('max-height', heightVal - minimumPad + 'px');
-        jq(this.placeArea).find('.player_arena_div').css('max-width', widthVal - 5 + 'px');
-        jq(this.placeArea).find('.div_player_arena_each').css('min-height', heightVal - 110 - minimumPad + 'px');
-        jq(this.placeArea).find('.div_player_arena_each').css('max-height', heightVal - minimumPad + 'px');
-        jq(this.placeArea).find('.table_player_arena_each').css('min-height', heightVal - 200 - minimumPad + 'px');
-        jq(this.placeArea).find('.table_player_arena_each').css('max-height', heightVal - minimumPad + 'px');
+        var minimumPad = 30; // 공통 여백 크기
+        var minHeight = heightVal - minimumPad - 100;
+        var maxHeight = heightVal - minimumPad - 40;
+        jq(this.placeArea).find('.player_arena_div').css('min-height', minHeight + 'px');
+        jq(this.placeArea).find('.player_arena_div').css('max-height', maxHeight + 'px');
+        jq(this.placeArea).find('.player_arena_div').css('max-width', (widthVal - 5) + 'px');
+        jq(this.placeArea).find('.div_player_arena_each').css('min-height', (minHeight - 10) + 'px');
+        jq(this.placeArea).find('.div_player_arena_each').css('max-height', (maxHeight - 5) + 'px');
+        jq(this.placeArea).find('.table_player_arena_each').css('height', (maxHeight - 15) + 'px');
         jq(this.placeArea).find('.table_player_arena_each').each(function () {
             var heightLefts = jq(jq(this).find('.player_arena_one_line_layout')[0]).height() * 4;
             var thisHeight = jq(this).height();
@@ -3090,13 +3094,14 @@ var XCardGameEngine = /** @class */ (function (_super) {
             jq(this.placeArea).find('select.need_alter').each(function () {
                 hjow_select_init(this);
             });
-            var insideHeight = jq(this.placeArea).find('.td_select_container').height();
-            if (insideHeight >= heightVal - 350)
-                insideHeight = heightVal - 350;
-            jq(this.placeArea).find('.selalter').css('max-height', insideHeight - 5);
-            jq(this.placeArea).find('.selalter').css('height', insideHeight - 5);
-            // jq(selfObj.placeArea).find('.selalter').css('max-height', heightVal - 150 - 220);
-            // jq(selfObj.placeArea).find('.selalter').css('height', heightVal - 150 - 220);
+            jq(this.placeArea).find('.selalter').each(function () {
+                var selAlter = jq(this);
+                var insideHeight = selAlter.parents('.table_player_arena_each').height() - 130;
+                if (insideHeight >= heightVal - 100)
+                    insideHeight = heightVal - 150;
+                selAlter.css('max-height', insideHeight - 5);
+                selAlter.css('height', insideHeight - 5);
+            });
         }
     };
     ;
@@ -3346,7 +3351,7 @@ var XCardGameEngine = /** @class */ (function (_super) {
         results += "       </td>" + "\n";
         results += "   </tr>" + "\n";
         results += "   <tr class='element e043'>" + "\n";
-        results += "       <td class='element e044 td_player_game_list min_height'>" + "\n";
+        results += "       <td class='element e044 td_player_game_list min_height' style='vertical-align: top;'>" + "\n";
         results += "          <div class='element e045 player_arena_div'>" + "\n";
         for (var idx = 0; idx < this.players.length; idx++) {
             var currentPlayer = this.players[idx];
