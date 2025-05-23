@@ -11,8 +11,8 @@ android {
         applicationId "org.duckdns.hjow.xcard"
         minSdk 26
         targetSdk 35
-        versionCode 16
-        versionName '1.1.6'
+        versionCode 17
+        versionName '1.1.7'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,9 +38,11 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation "androidx.webkit:webkit:1.13.0"
+    implementation "androidx.browser:browser:1.5.0"
     implementation platform("com.google.firebase:firebase-bom:33.13.0")
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
+    // implementation("com.google.android.gms:play-services-ads:24.2.0")
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
